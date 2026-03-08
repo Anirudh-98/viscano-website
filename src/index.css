@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-white font-sans antialiased overflow-x-hidden bg-[#0A0A0A];
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply tracking-tight font-bold;
+  }
+}
+
+@layer utilities {
+  .pill-nav {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-lg rounded-full flex items-center;
+  }
+
+  .pill-btn {
+    @apply inline-flex items-center justify-center px-6 py-2 rounded-full font-medium transition-transform duration-300 hover:scale-105 active:scale-95;
+  }
+
+  .glass-card {
+    @apply bg-white/90 backdrop-blur-md rounded-[2.5rem] shadow-xl border border-white/50;
+  }
+
+  /* AWSMD signature soft gradient background */
+  .aws-gradient-bg {
+    background: radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.8), transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(199, 183, 255, 0.4), transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(145, 210, 255, 0.2), transparent 50%);
+    background-color: #E9E6F6;
+  }
+
+  .spin-slow {
+    animation: spin 10s linear infinite;
+  }
+
+  /* Custom CSS for 3D perspective used in scroll morph component */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
