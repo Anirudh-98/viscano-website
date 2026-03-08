@@ -248,15 +248,15 @@ export default function Blog() {
             </section>
 
             {/* ── NEWSLETTER CTA ── */}
-            <section className="px-6 lg:px-16 max-w-[1400px] mx-auto pb-32">
+            <section className="px-4 sm:px-6 lg:px-16 max-w-[1400px] mx-auto pb-32">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }} transition={{ duration: 0.9 }}
-                    className="relative rounded-[2rem] bg-white/[0.03] border border-white/[0.08] p-10 md:p-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-10 hover:bg-white/[0.05] transition-all duration-500"
+                    className="relative rounded-[2rem] bg-white/[0.03] border border-white/[0.08] p-8 sm:p-10 md:p-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-10 hover:bg-white/[0.05] transition-all duration-500"
                 >
                     <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/[0.02] rounded-full blur-3xl pointer-events-none" />
                     <div className="relative z-10">
-                        <h3 className="text-3xl md:text-4xl font-serif font-light tracking-tight mb-3">
+                        <h3 className="text-2xl sm:text-3xl md:text-4xl font-serif font-light tracking-tight mb-3">
                             Get new ideas in your inbox.<br />
                             <span className="italic text-white/40">No noise, ever.</span>
                         </h3>
@@ -264,13 +264,13 @@ export default function Blog() {
                             One email when we publish something worth reading. Unsubscribe any time.
                         </p>
                     </div>
-                    <div className="relative z-10 flex gap-3 w-full md:w-auto">
+                    <div className="relative z-10 flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                         <input
                             type="email"
                             placeholder="you@company.com"
-                            className="flex-1 md:w-64 bg-white/[0.05] border border-white/10 rounded-full px-5 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-white/30 focus:bg-white/[0.08] transition-all font-medium"
+                            className="w-full sm:w-64 bg-white/[0.05] border border-white/10 rounded-full px-5 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-white/30 focus:bg-white/[0.08] transition-all font-medium"
                         />
-                        <button className="bg-white text-black text-xs font-bold px-6 py-3 rounded-full hover:scale-[1.02] transition-all flex items-center gap-2 shrink-0">
+                        <button className="w-full sm:w-auto bg-white text-black text-xs font-bold px-6 py-3 rounded-full hover:scale-[1.02] transition-all flex items-center justify-center gap-2 shrink-0">
                             Subscribe <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                     </div>

@@ -9,74 +9,86 @@ gsap.registerPlugin(ScrollTrigger);
 const cases = [
     {
         id: '01',
-        client: 'Nexus Commerce',
-        category: 'Development · Brand',
-        title: 'Rebuilding a $40M DTC store for scale and speed.',
-        outcome: '+312% revenue in 8 months',
-        tags: ['Headless Commerce', 'Next.js', 'Shopify Plus'],
-        img: 'https://images.unsplash.com/photo-1555421689-d68471e189f2?w=1400&q=80',
+        client: 'Kusum Ganji',
+        category: 'Portfolio · Brand',
+        title: 'Portfolio website for Telugu influencer Kusum Ganji.',
+        outcome: 'Delivered a stunning personal brand platform',
+        tags: ['Portfolio', 'Brand'],
+        img: '/kusum.png',
+        url: 'https://kusumganji.com/',
         size: 'large',
+        bg: 'from-[#1A1A1A] to-[#0A0A0A]',
     },
     {
         id: '02',
-        client: 'Aether Studio',
-        category: 'Brand Identity',
-        title: 'Complete visual identity for a Dubai luxury brand.',
-        outcome: "Featured in Dezeen & It's Nice That",
-        tags: ['Brand Strategy', 'Visual Identity', 'Motion'],
-        img: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80',
+        client: 'The Fehu Code',
+        category: 'E-Commerce · Development',
+        title: 'E-commerce platform for heritage-themed brand.',
+        outcome: 'Full-stack e-commerce with cultural identity',
+        tags: ['E-Commerce', 'Development'],
+        img: '/fehu.png',
+        url: 'https://www.fehu.org.in/',
         size: 'small',
+        bg: 'from-[#151515] to-[#050505]',
     },
     {
         id: '03',
-        client: 'Orbit SaaS',
-        category: 'Product Design · Dev',
-        title: 'Designing and shipping a B2B analytics platform from 0→1.',
-        outcome: '4,200 signups in launch week',
-        tags: ['UI/UX', 'React', 'Node.js'],
-        img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80',
+        client: 'Grox Digital',
+        category: 'Web Development · Brand',
+        title: 'Custom website for Grox Digital Pvt. Ltd.',
+        outcome: 'Modern digital presence for a growing agency',
+        tags: ['Web Development', 'Brand'],
+        img: '/grox.png',
+        url: 'https://grox.digital/',
         size: 'small',
+        bg: 'from-[#1c1c1c] to-[#000000]',
     },
     {
         id: '04',
-        client: 'Luxe_Time',
-        category: 'Growth · Content',
-        title: 'Global growth campaign for a luxury watch brand.',
-        outcome: '2.9x ROAS across 12 markets',
-        tags: ['Paid Social', 'Content Production', 'CRO'],
-        img: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=1400&q=80',
+        client: 'Sherpal',
+        category: 'Web Design · Development',
+        title: 'AI-powered platform website for Sherpal.',
+        outcome: 'Scalable SaaS product landing page',
+        tags: ['Web Design', 'Development'],
+        img: '/sherpal.png',
+        url: 'https://sherpalai.com/',
         size: 'large',
+        bg: 'from-[#111] to-[#050505]',
     },
     {
         id: '05',
-        client: 'Vanta Health',
-        category: 'Brand · Development',
-        title: 'Brand and platform for a seed-stage health startup.',
-        outcome: 'Raised $2.1M Series A post-launch',
-        tags: ['Brand Identity', 'Web App', 'Strategy'],
-        img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80',
+        client: 'Delta HRMS',
+        category: 'SaaS · UI/UX',
+        title: 'HR management SaaS product website.',
+        outcome: 'Clean, conversion-focused SaaS UI',
+        tags: ['SaaS', 'UI/UX'],
+        img: '/deltahrms.png',
+        url: 'https://deltahrms.com/',
         size: 'small',
+        bg: 'from-[#181818] to-[#080808]',
     },
     {
         id: '06',
-        client: 'Theo Agency',
-        category: 'Rebrand · Strategy',
-        title: 'Full rebrand and market repositioning for a UK creative agency.',
-        outcome: '+58% new business enquiries in Q1',
-        tags: ['Brand Audit', 'Identity', 'Positioning'],
-        img: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&q=80',
+        client: 'Laxmi Developers',
+        category: 'Real Estate · Brand',
+        title: 'Real estate developer brand & web presence.',
+        outcome: 'Elevated brand trust for a property developer',
+        tags: ['Real Estate', 'Brand'],
+        img: '/laxmidevlopers.png',
+        url: 'https://www.laxmideveloper.com/',
         size: 'small',
+        bg: 'from-[#141414] to-[#000]',
     },
 ];
 
 const stats = [
-    { n: '150+', l: 'Projects Delivered' },
-    { n: '$200M+', l: 'Client Revenue Generated' },
+    { n: '10+', l: 'Projects Delivered' },
+    { n: '₹ 1M+', l: 'Client Revenue' },
     { n: '94%', l: 'Client Renewal Rate' },
-    { n: '3.1x', l: 'Average ROAS' },
+    { n: '9+', l: 'Years Active' },
 ];
 
-const filters = ['All', 'Brand', 'Development', 'Growth', 'Content'];
+const filters = ['All', 'Brand', 'Development', 'E-Commerce', 'SaaS', 'UI/UX'];
 
 export default function Results() {
     const heroRef = useRef(null);
@@ -171,19 +183,21 @@ export default function Results() {
             <section className="pb-12 px-6 lg:px-20 max-w-[1400px] mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4 auto-rows-[340px]">
                     {filtered.map((c, i) => (
-                        <div
+                        <a
                             key={c.id}
+                            href={c.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             onMouseEnter={() => setHovered(c.id)}
                             onMouseLeave={() => setHovered(null)}
-                            className={`res-reveal group relative overflow-hidden rounded-2xl cursor-pointer ${c.size === 'large' ? 'md:col-span-8' : 'md:col-span-4'
+                            className={`res-reveal group relative overflow-hidden rounded-2xl cursor-pointer block ${c.size === 'large' ? 'md:col-span-8' : 'md:col-span-4'
                                 }`}
                         >
-                            {/* Image */}
-                            <div className="absolute inset-0 bg-black/5">
-                                <img src={c.img} alt={c.title}
-                                    className={`w-full h-full object-cover transition-transform duration-700 ${hovered === c.id ? 'scale-105' : 'scale-100'}`} />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                            </div>
+                            {/* Background gradient + image */}
+                            <div className={`absolute inset-0 bg-gradient-to-b ${c.bg}`} />
+                            <img src={c.img} alt={c.title}
+                                className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 opacity-80 group-hover:opacity-100 ${hovered === c.id ? 'scale-[1.03]' : 'scale-100'}`} />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                             {/* Top row */}
                             <div className="absolute top-6 left-6 right-6 flex items-start justify-between z-10">
@@ -213,7 +227,7 @@ export default function Results() {
                             <div className="absolute bottom-6 right-6 text-white/10 text-6xl font-serif font-light leading-none z-10 select-none">
                                 {c.id}
                             </div>
-                        </div>
+                        </a>
                     ))}
                 </div>
             </section>
