@@ -7,9 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.js"
   },
   "dependencies": {
+    "express": "^5.2.1",
     "firebase": "^12.10.0",
     "firebase-frameworks": "^0.4.2",
     "framer-motion": "^12.34.3",
