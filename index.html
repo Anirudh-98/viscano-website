@@ -2,18 +2,116 @@
 <html lang="en">
 
 <head>
+  <!-- ── Google Analytics ── -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YMEFWR8GNP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YMEFWR8GNP');
+  </script>
+
   <meta charset="UTF-8" />
   <link rel="icon" type="image/jpeg" href="/vfav.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── Performance hints ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="dns-prefetch" href="https://www.googleapis.com">
+
+  <!-- ── Typography ── -->
+  <!-- DM Serif Display (hero / pull quotes) + DM Mono (labels / code) -->
+  <!-- Inter loaded as fallback for Neue Haas Grotesk on non-Apple devices -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800;900&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800;900&display=swap" />
+
+  <!-- ── Primary SEO ── -->
+  <title>Viscano — Creative Studio | Brand, Web Design & Development in Hyderabad</title>
   <meta name="description"
-    content="Viscano is a full-service creative studio specialising in brand identity, UI/UX design, web development, and motion — built for ambitious founders who need visual strategy that scales." />
-  <meta name="theme-color" content="#080808" />
-  <meta property="og:title" content="Viscano — Creative Studio" />
+    content="Viscano is a full-service creative studio in Hyderabad. We build brand identities, UI/UX design, web development, and digital growth systems for ambitious businesses across India." />
+  <meta name="keywords"
+    content="creative studio Hyderabad, web design agency Hyderabad, brand identity Hyderabad, UI UX design Hyderabad, web development Hyderabad, branding agency Visakhapatnam, digital agency India, logo design Hyderabad, app design Hyderabad, startup branding India, Viscano" />
+  <link rel="canonical" href="https://viscano.com/" />
+  <link rel="llms" href="/llms.txt" />
+
+  <!-- ── Geo Targeting ── -->
+  <meta name="geo.region" content="IN-TG" />
+  <meta name="geo.placename" content="Hyderabad, Telangana, India" />
+  <meta name="geo.position" content="17.3850;78.4867" />
+  <meta name="ICBM" content="17.3850, 78.4867" />
+  <meta name="language" content="en-IN" />
+
+  <!-- ── Open Graph ── -->
+  <meta property="og:title" content="Viscano — Creative Studio | Hyderabad" />
   <meta property="og:description"
-    content="Brand identity, UI/UX, web development and motion for companies that want to grow." />
+    content="Viscano is a full-service creative studio in Hyderabad. We build brand identities, UI/UX design, web development, and digital growth systems for ambitious businesses across India." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://viscano.com/" />
+  <meta property="og:image" content="https://viscano.com/aboutlogo.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_IN" />
+  <meta property="og:site_name" content="Viscano Creative Studio" />
+
+  <!-- ── Twitter / X ── -->
   <meta name="twitter:card" content="summary_large_image" />
-  <title>Viscano — We engineer brands that scale</title>
+  <meta name="twitter:title" content="Viscano — Creative Studio | Hyderabad" />
+  <meta name="twitter:description"
+    content="Viscano is a full-service creative studio in Hyderabad. We build brand identities, UI/UX design, web development, and digital growth systems for ambitious businesses across India." />
+  <meta name="twitter:image" content="https://viscano.com/aboutlogo.jpg" />
+
+  <!-- ── Theme ── -->
+  <meta name="theme-color" content="#080808" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- ── LocalBusiness JSON-LD ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://viscano.com/#organization",
+    "name": "Viscano Creative Studio",
+    "alternateName": "Viscano",
+    "description": "Full-service creative studio specialising in brand identity, UI/UX design, web development, motion design, and digital growth for ambitious brands.",
+    "url": "https://viscano.com",
+    "logo": "https://viscano.com/footerlogo.png",
+    "image": "https://viscano.com/aboutlogo.jpg",
+    "telephone": "+91-6301361466",
+    "email": "connect@viscano.com",
+    "foundingDate": "2016",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Hyderabad",
+      "addressRegion": "Telangana",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 17.3850,
+      "longitude": 78.4867
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Hyderabad", "sameAs": "https://en.wikipedia.org/wiki/Hyderabad,_India" },
+      { "@type": "City", "name": "Visakhapatnam", "sameAs": "https://en.wikipedia.org/wiki/Visakhapatnam" },
+      { "@type": "Country", "name": "India" }
+    ],
+    "serviceType": [
+      "Brand Identity Design", "Logo Design", "UI/UX Design",
+      "Web Development", "SaaS Product Development", "E-commerce Development",
+      "Mobile App Development", "Motion Design & Video", "Photography",
+      "Social Media Content", "Digital Marketing", "Analytics & CRO",
+      "Pitch Deck Design"
+    ],
+    "priceRange": "₹₹",
+    "sameAs": [
+      "https://www.instagram.com/viscano.global?igsh=MmNsZXZwbWVuNTJl",
+      "https://www.linkedin.com/company/viscano"
+    ]
+  }
+  </script>
 </head>
 
 <body>

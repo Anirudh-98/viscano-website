@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SEOHead from '../components/SEOHead';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ArrowRight, Clock, Tag } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -19,18 +20,32 @@ const TAGS = ['All', 'Brand', 'Design', 'Development', 'Strategy', 'Motion'];
 
 const POSTS = [
     {
+        id: 0,
+        slug: 'leading-creative-studio-hyderabad-visakhapatnam',
+        tag: 'Agency',
+        title: 'Elevating Digital Experiences: Why Viscano is the Premier Creative Studio in Hyderabad & Visakhapatnam',
+        excerpt: "In a crowded digital landscape, aesthetic alone isn't enough. Here is how Viscano is building highly converting, beautifully tailored brand identities and digital platforms.",
+        author: 'Anirudh',
+        date: 'March 9, 2026',
+        readTime: '6 min read',
+        featured: true,
+        img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80',
+    },
+    {
         id: 1,
+        slug: 'why-your-logo-is-the-last-thing-your-brand-needs',
         tag: 'Brand',
         title: 'Why your logo is the last thing your brand needs',
         excerpt: "Most founders start with a logo. We start with the story. Here's why that order matters more than you think.",
         author: 'Anirudh',
         date: 'Feb 28, 2025',
         readTime: '5 min read',
-        featured: true,
+        featured: false,
         img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80',
     },
     {
         id: 2,
+        slug: 'the-5-second-rule-for-ui-that-converts',
         tag: 'Design',
         title: 'The 5-second rule for UI that converts',
         excerpt: "If a new user can't understand your product in five seconds, you've already lost them. Here's how to fix that.",
@@ -42,6 +57,7 @@ const POSTS = [
     },
     {
         id: 3,
+        slug: 'building-fast-vite-react-and-shipping-on-day-1',
         tag: 'Development',
         title: 'Building fast: Vite, React, and shipping on Day 1',
         excerpt: 'Our internal stack for going from brief to deployed in record time — without cutting corners on quality.',
@@ -53,6 +69,7 @@ const POSTS = [
     },
     {
         id: 4,
+        slug: 'the-prd-as-a-design-brief-how-we-scope-projects-differently',
         tag: 'Strategy',
         title: 'The PRD as a design brief: how we scope projects differently',
         excerpt: "A Product Requirements Document isn't just for engineers. We use it as the foundation for every brand engagement.",
@@ -64,6 +81,7 @@ const POSTS = [
     },
     {
         id: 5,
+        slug: 'motion-design-isnt-decoration-its-communication',
         tag: 'Motion',
         title: "Motion design isn't decoration — it's communication",
         excerpt: "The difference between a brand that feels premium and one that doesn't often comes down to how it moves.",
@@ -75,6 +93,7 @@ const POSTS = [
     },
     {
         id: 6,
+        slug: 'rebranding-without-losing-your-audience',
         tag: 'Brand',
         title: 'Rebranding without losing your audience',
         excerpt: 'The art of evolving a brand without alienating the customers who made you who you are today.',
@@ -96,12 +115,18 @@ export default function Blog() {
 
     return (
         <div className="min-h-screen bg-[#080808] text-white overflow-hidden">
+            <SEOHead
+                title="Blog & Insights — Design, Branding & Tech | Viscano Hyderabad"
+                description="Read Viscano's journal on brand identity, UI/UX design, web development, and creative strategy. Insights from a Hyderabad-based design studio serving India."
+                keywords="design blog Hyderabad, branding insights India, UI UX articles, web design tips, creative studio blog Hyderabad, Viscano journal"
+                canonical="https://viscano.com/blog"
+            />
 
             {/* ── HERO ── */}
             <section className="relative w-full pt-40 pb-20 px-6 lg:px-16 max-w-[1400px] mx-auto">
                 <motion.div initial="hidden" animate="visible" variants={stagger}>
-                    <motion.div variants={fadeUp} className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-white/30 mb-10">
-                        <span className="w-8 h-[1px] bg-white/20" />
+                    <motion.div variants={fadeUp} className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-white/55 mb-10">
+                        <span className="w-8 h-[1px] bg-white/40" />
                         Viscano Journal
                     </motion.div>
                     <div className="overflow-visible pb-2 mb-2">
@@ -135,41 +160,43 @@ export default function Blog() {
             {/* ── FEATURED POST ── */}
             {featured && (
                 <section className="px-6 lg:px-16 max-w-[1400px] mx-auto pb-16">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }} transition={{ duration: 0.9 }}
-                        className="group relative w-full h-[55vh] md:h-[65vh] rounded-3xl overflow-hidden border border-white/[0.07] cursor-pointer"
-                    >
-                        <img src={featured.img} alt={featured.title} loading="lazy" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105 opacity-50 group-hover:opacity-70" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                    <Link to={featured.slug ? `/blog/${featured.slug}` : '#'}>
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }} transition={{ duration: 0.9 }}
+                            className="group relative w-full h-[55vh] md:h-[65vh] rounded-3xl overflow-hidden border border-white/[0.07] cursor-pointer"
+                        >
+                            <img src={featured.img} alt={featured.title} loading="lazy" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105 opacity-50 group-hover:opacity-70" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
-                        {/* Top badges */}
-                        <div className="absolute top-6 left-6 flex items-center gap-3">
-                            <span className="px-3 py-1 rounded-full bg-white text-black text-[10px] font-bold tracking-widest uppercase">Featured</span>
-                            <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-white/70 text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md">{featured.tag}</span>
-                        </div>
-                        <div className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <ArrowUpRight className="w-4 h-4" />
-                        </div>
+                            {/* Top badges */}
+                            <div className="absolute top-6 left-6 flex items-center gap-3">
+                                <span className="px-3 py-1 rounded-full bg-white text-black text-[10px] font-bold tracking-widest uppercase">Featured</span>
+                                <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-white/70 text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md">{featured.tag}</span>
+                            </div>
+                            <div className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <ArrowUpRight className="w-4 h-4" />
+                            </div>
 
-                        {/* Bottom content */}
-                        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-                            <div className="flex items-center gap-4 text-[10px] tracking-widest uppercase text-white/40 mb-4">
-                                <span>{featured.author}</span>
-                                <span className="w-1 h-1 rounded-full bg-white/20" />
-                                <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {featured.readTime}</span>
-                                <span className="w-1 h-1 rounded-full bg-white/20" />
-                                <span>{featured.date}</span>
+                            {/* Bottom content */}
+                            <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+                                <div className="flex items-center gap-4 text-[10px] tracking-widest uppercase text-white/40 mb-4">
+                                    <span>{featured.author}</span>
+                                    <span className="w-1 h-1 rounded-full bg-white/40" />
+                                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {featured.readTime}</span>
+                                    <span className="w-1 h-1 rounded-full bg-white/40" />
+                                    <span>{featured.date}</span>
+                                </div>
+                                <h2 className="text-2xl md:text-4xl lg:text-5xl font-serif font-light tracking-tight text-white leading-[1.1] max-w-2xl mb-4 group-hover:text-white/90 transition-colors">
+                                    {featured.title}
+                                </h2>
+                                <p className="text-white/50 text-sm leading-relaxed max-w-xl font-light">{featured.excerpt}</p>
+                                <div className="mt-6 flex items-center gap-2 text-xs font-semibold text-white/60 group-hover:text-white transition-colors">
+                                    Read Article <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                                </div>
                             </div>
-                            <h2 className="text-2xl md:text-4xl lg:text-5xl font-serif font-light tracking-tight text-white leading-[1.1] max-w-2xl mb-4 group-hover:text-white/90 transition-colors">
-                                {featured.title}
-                            </h2>
-                            <p className="text-white/50 text-sm leading-relaxed max-w-xl font-light">{featured.excerpt}</p>
-                            <div className="mt-6 flex items-center gap-2 text-xs font-semibold text-white/60 group-hover:text-white transition-colors">
-                                Read Article <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                            </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </Link>
                 </section>
             )}
 
@@ -196,47 +223,51 @@ export default function Blog() {
             {/* ── POST GRID ── */}
             <section className="px-6 lg:px-16 max-w-[1400px] mx-auto pb-32">
                 <motion.div
-                    key={activeTag}
-                    initial="hidden" animate="visible"
+                    layout
                     variants={stagger}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                    initial="hidden" animate="visible"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
                 >
-                    {allFiltered.map((post, i) => (
-                        <motion.div
-                            key={post.id}
-                            variants={fadeUp}
-                            custom={i}
-                            className="group cursor-pointer flex flex-col"
-                        >
-                            {/* Image */}
-                            <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-5 bg-white/[0.03]">
-                                <img src={post.img} alt={post.title} loading="lazy" className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-90" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-[9px] tracking-widest uppercase text-white/60 font-semibold">
-                                    {post.tag}
-                                </span>
-                                <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                                    <ArrowUpRight className="w-3.5 h-3.5" />
+                    {allFiltered.map(p => (
+                        <Link to={p.slug ? `/blog/${p.slug}` : '#'} key={p.id}>
+                            <motion.article
+                                layout
+                                variants={fadeUp}
+                                className="group cursor-pointer flex flex-col h-full"
+                            >
+                                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-white/[0.03] border border-white/[0.06]">
+                                    <img src={p.img} alt={p.title} loading="lazy" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" />
+                                    {/* Gradient overlay to ensure top badges are readable */}
+                                    <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-black/60 to-transparent opacity-80" />
+
+                                    <div className="absolute top-4 left-4">
+                                        <span className="px-3 py-1 rounded-full bg-black/40 border border-white/20 text-white/90 text-[9px] font-bold tracking-widest uppercase backdrop-blur-md">
+                                            {p.tag}
+                                        </span>
+                                    </div>
+                                    <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/40 border border-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <ArrowUpRight className="w-3 h-3 text-white" />
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Meta */}
-                            <div className="flex items-center gap-3 text-[10px] tracking-widest uppercase text-white/30 mb-3">
-                                <span>{post.author}</span>
-                                <span className="w-1 h-1 rounded-full bg-white/15" />
-                                <span className="flex items-center gap-1"><Clock className="w-2.5 h-2.5" /> {post.readTime}</span>
-                            </div>
-
-                            {/* Title + excerpt */}
-                            <h3 className="text-lg md:text-xl font-serif font-light tracking-tight text-white/90 leading-[1.2] mb-3 group-hover:text-white transition-colors">
-                                {post.title}
-                            </h3>
-                            <p className="text-xs text-white/35 font-light leading-relaxed flex-1">{post.excerpt}</p>
-
-                            <div className="mt-4 flex items-center gap-2 text-[11px] font-semibold text-white/30 group-hover:text-white/80 transition-colors">
-                                Read more <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                            </div>
-                        </motion.div>
+                                <div className="flex flex-col flex-grow">
+                                    <div className="flex items-center gap-3 text-[9px] font-bold tracking-widest uppercase text-white/30 mb-4">
+                                        <span>{p.author}</span>
+                                        <span className="w-1 h-1 rounded-full bg-white/40" />
+                                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {p.readTime}</span>
+                                    </div>
+                                    <h3 className="text-xl md:text-2xl font-serif font-light tracking-tight text-white mb-3 group-hover:text-white/80 transition-colors leading-[1.2]">
+                                        {p.title}
+                                    </h3>
+                                    <p className="text-white/40 text-sm font-light leading-relaxed mb-6 mt-auto">
+                                        {p.excerpt}
+                                    </p>
+                                    <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-white/50 group-hover:text-white transition-colors mt-auto">
+                                        Read more <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+                                    </div>
+                                </div>
+                            </motion.article>
+                        </Link>
                     ))}
                 </motion.div>
 

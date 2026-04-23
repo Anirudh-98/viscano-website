@@ -7,18 +7,30 @@ export default {
   theme: {
     extend: {
       colors: {
-        'aws-bg': '#E9E6F6',      // Soft lavender hero background
-        'aws-card': '#FFFFFF',    // White card background
-        'aws-dark': '#131315',    // Deep black for main typography
-        'aws-gray': '#F5F5FA',    // Very light gray for secondary sections
-        'aws-text-muted': '#8E8E9F', // Muted text for descriptions
-        'aws-accent': '#6A4DFF',  // Vibrant purple accent
-        'aws-pill': '#F5F5F7',    // Light pill background
+        // ── Viscano Design Tokens ──────────────────────
+        'obsidian':   '#0A0A0A',  // Primary BG — page, nav, hero
+        'surface':    '#0F0F0F',  // Card / section surface
+        'off-white':  '#F5F3EE',  // Text Primary — body copy on dark
+        'mid-grey':   '#555555',  // Text Secondary — muted labels, meta
+        'sec-green':  '#1A7A4A',  // Security Differentiator — shield, callouts
+        'signal-red': '#C0392B',  // P0 / urgent tags / error states
+        'royal-blue': '#1A5CA8',  // Links / informational cards
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['"Instrument Serif"', 'serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        // Heading 1–3 / Body / Caption → Neue Haas Grotesk
+        // Ships natively on macOS/iOS; Inter is the web fallback for Windows/Android
+        sans: [
+          '"Neue Haas Grotesk Display"',
+          '"HelveticaNeue"',
+          '"Helvetica Neue"',
+          'Inter',
+          'Arial',
+          'sans-serif',
+        ],
+        // Display / Hero / Pull quotes → DM Serif Display
+        serif: ['"DM Serif Display"', 'Georgia', 'serif'],
+        // Section labels / paths / data → DM Mono
+        mono: ['"DM Mono"', '"JetBrains Mono"', 'monospace'],
       },
       borderRadius: {
         '3xl': '1.5rem',

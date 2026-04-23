@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
+import SEOHead from '../components/SEOHead';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Mail, MapPin, Phone } from 'lucide-react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,9 +32,22 @@ export default function Contact() {
         setSelected((prev) => prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        gsap.to(formRef.current, {
+        try {
+            await addDoc(collection(db, 'contactMessages'), {
+                name: form.name,
+                email: form.email,
+                services: selected,
+                message: form.message,
+                createdAt: serverTimestamp(),
+                status: 'new'
+            });
+        } catch (error) {
+            console.error("Error submitting contact form:", error);
+        }
+
+        gsap.to('.contact-form-element', {
             opacity: 0, y: -20, duration: 0.4, ease: 'power2.in',
             onComplete: () => setSubmitted(true)
         });
@@ -111,6 +127,12 @@ export default function Contact() {
 
     return (
         <div ref={heroRef} className="bg-white text-black min-h-screen overflow-hidden font-sans selection:bg-black selection:text-white">
+            <SEOHead
+                title="Contact Viscano — Hire a Design Agency in Hyderabad & Visakhapatnam"
+                description="Get in touch with Viscano Creative Studio — based in Hyderabad, serving Visakhapatnam and all of India. Start your brand, web, or design project today."
+                keywords="contact design agency Hyderabad, hire web designer Hyderabad, branding agency contact Visakhapatnam, creative studio contact India, Viscano contact"
+                canonical="https://viscano.com/contact"
+            />
 
             {/* ── HERO ── */}
             <section className="pt-36 pb-20 px-6 lg:px-20 max-w-[1400px] mx-auto">
@@ -161,21 +183,30 @@ export default function Contact() {
                     {/* ── FORM ── */}
                     <div ref={formRef}>
                         {submitted ? (
-                            <div className="success-msg py-20 flex flex-col items-start">
-                                <div className="w-16 h-16 rounded-full bg-black flex items-center justify-center mb-8">
-                                    <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
+                            <div className="success-msg flex flex-col items-center justify-center text-center py-20 px-0 md:px-10 gap-6">
+                                <div className="w-16 h-16 rounded-full bg-black/5 border border-black/15 flex items-center justify-center mb-2">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                                 </div>
-                                <h2 className="text-4xl font-serif font-light mb-4 tracking-tight">Message received.</h2>
-                                <p className="text-black/50 font-light text-lg mb-10">We'll be in touch within 24 hours.</p>
-                                <button onClick={() => setSubmitted(false)}
-                                    className="text-xs tracking-[0.15em] uppercase font-medium border-b border-black/30 pb-1 hover:border-black transition-colors">
-                                    Send another
-                                </button>
+                                <h3 className="text-3xl font-semibold tracking-tight text-black">We've got your message!</h3>
+                                <p className="text-black/60 text-sm leading-relaxed max-w-sm">
+                                    Thanks, <span className="text-black font-medium">{form.name ? form.name.split(' ')[0] : 'there'}</span> — our team will reach you at <span className="text-black font-medium">{form.email}</span> within 24 hours.
+                                </p>
+                                <div className="flex flex-col gap-4 mt-2 items-center">
+                                    <a href="mailto:connect@viscano.com" className="text-xs font-bold text-black/50 hover:text-black transition-colors tracking-wide border border-black/10 rounded-full px-5 py-2">
+                                        connect@viscano.com
+                                    </a>
+                                    <button onClick={() => {
+                                        setSubmitted(false);
+                                        setForm({ name: '', email: '', message: '' });
+                                        setSelected([]);
+                                    }}
+                                        className="text-[10px] tracking-[0.15em] uppercase font-medium text-black/40 hover:text-black transition-colors">
+                                        Send another
+                                    </button>
+                                </div>
                             </div>
                         ) : (
-                            <form onSubmit={handleSubmit} className="space-y-0">
+                            <form onSubmit={handleSubmit} className="contact-form-element space-y-0">
 
                                 {/* Name */}
                                 <div className={`relative border-b transition-colors duration-300 ${focusedField === 'name' ? 'border-black' : 'border-black/10'}`}>

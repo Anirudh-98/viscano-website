@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SEOHead from '../components/SEOHead';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ArrowRight, Mail, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -24,7 +25,7 @@ const TEAM = [
         role: 'Founder & Creative Director',
         dept: 'Leadership',
         bio: 'Drives the vision behind every brand Viscano builds. 9+ years turning ambitious ideas into market-defining identities.',
-        img: '/ani.png',
+        img: '/ani.webp',
         linkedin: '#',
         email: 'chaitanya@viscano.com',
     },
@@ -33,7 +34,7 @@ const TEAM = [
         role: 'Head of Product Design',
         dept: 'Design',
         bio: 'Crafts interfaces that feel inevitable. Obsessed with the gap between good design and great design.',
-        img: '/chaitanya.png',
+        img: '/chaitanya.webp',
         linkedin: '#',
         email: 'arjun@viscano.com',
     },
@@ -149,6 +150,12 @@ export default function Team() {
 
     return (
         <div className="min-h-screen bg-[#080808] text-white overflow-hidden">
+            <SEOHead
+                title="Our Team — Designers & Developers at Viscano Hyderabad"
+                description="Meet the Viscano team — a small, experienced group of designers, engineers, and strategists based in Hyderabad, building brands and digital products across India."
+                keywords="design team Hyderabad, creative studio team India, UI UX designers Hyderabad, web developers Visakhapatnam, Viscano team"
+                canonical="https://viscano.com/team"
+            />
 
             {/* ── HERO ── */}
             <section className="relative w-full min-h-[75vh] flex flex-col justify-end pb-20 md:pb-28 overflow-hidden bg-[#080808]">
@@ -167,7 +174,7 @@ export default function Team() {
 
                 {/* Left tag */}
                 <div className="absolute top-28 left-6 lg:left-16 z-10 flex items-center gap-3 text-white/30 text-[10px] tracking-[0.2em] uppercase">
-                    <span className="w-8 h-[1px] bg-white/20" />
+                    <span className="w-8 h-[1px] bg-white/40" />
                     The People Behind Viscano
                 </div>
 
@@ -315,7 +322,7 @@ export default function Team() {
                     {/* Left */}
                     <div className="relative z-10 max-w-xl">
                         <div className="flex items-center gap-3 text-[10px] tracking-[0.2em] uppercase text-white/30 mb-6">
-                            <span className="w-6 h-[1px] bg-white/20" />
+                            <span className="w-6 h-[1px] bg-white/40" />
                             Join the team
                         </div>
                         <h3 className="text-4xl md:text-5xl font-serif font-light leading-[1.1] tracking-tight mb-4">

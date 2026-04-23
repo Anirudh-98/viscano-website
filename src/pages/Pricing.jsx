@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SEOHead from '../components/SEOHead';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ArrowRight, CheckCircle2, FileText, MessageSquare, Zap, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -93,6 +94,12 @@ export default function Pricing() {
 
     return (
         <div className="min-h-screen bg-[#080808] text-white overflow-hidden">
+            <SEOHead
+                title="Pricing — Web Design & Brand Project Costs | Viscano Hyderabad"
+                description="Transparent, project-scoped pricing for web design, branding, and development in Hyderabad and across India. No hidden tiers — quotes built from your brief."
+                keywords="web design pricing Hyderabad, affordable branding India, brand design cost Hyderabad, web development cost Visakhapatnam, creative studio pricing India"
+                canonical="https://viscano.com/pricing"
+            />
 
             {/* ── HERO ── */}
             <section className="relative w-full pt-40 pb-20 px-6 lg:px-16 max-w-[1400px] mx-auto">
@@ -104,8 +111,8 @@ export default function Pricing() {
                 </svg>
 
                 <motion.div initial="hidden" animate="visible" variants={stagger} className="relative z-10">
-                    <motion.div variants={fadeUp} className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-white/30 mb-10">
-                        <span className="w-8 h-[1px] bg-white/20" />
+                    <motion.div variants={fadeUp} className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-white/55 mb-10">
+                        <span className="w-8 h-[1px] bg-white/40" />
                         Pricing
                     </motion.div>
 
@@ -194,7 +201,7 @@ export default function Pricing() {
             {/* ── SERVICE AREAS ── */}
             <section className="px-6 lg:px-16 max-w-[1400px] mx-auto pb-24">
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }} variants={stagger}>
-                    <motion.div variants={fadeUp} className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-white/25 mb-12">
+                    <motion.div variants={fadeUp} className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-white/55 mb-12">
                         <span className="w-6 h-[1px] bg-white/15" />
                         What we scope & price
                     </motion.div>
@@ -235,7 +242,7 @@ export default function Pricing() {
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }} variants={stagger}>
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
                         <div>
-                            <motion.div variants={fadeUp} className="text-[10px] tracking-[0.25em] uppercase text-white/25 mb-4">How it works</motion.div>
+                            <motion.div variants={fadeUp} className="text-[10px] tracking-[0.25em] uppercase text-white/55 mb-4">How it works</motion.div>
                             <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-serif font-light tracking-tight leading-[1.05]">
                                 From brief to<br />
                                 <span className="italic text-white/40">fixed quote.</span>
@@ -272,7 +279,7 @@ export default function Pricing() {
                     className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-16"
                 >
                     <div>
-                        <motion.div variants={fadeUp} className="text-[10px] tracking-[0.25em] uppercase text-white/25 mb-4">Questions</motion.div>
+                        <motion.div variants={fadeUp} className="text-[10px] tracking-[0.25em] uppercase text-white/55 mb-4">Questions</motion.div>
                         <motion.h2 variants={fadeUp} className="text-4xl font-serif font-light tracking-tight leading-tight mb-6">
                             Pricing<br /><span className="italic text-white/40">FAQs.</span>
                         </motion.h2>

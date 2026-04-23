@@ -1,58 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
+import SEOHead from '../components/SEOHead';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Search } from 'lucide-react';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../firebase';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const roles = [
-    {
-        id: '01',
-        title: 'Senior Brand Designer',
-        department: 'Design',
-        type: 'Full-time · Remote',
-        location: 'Remote (Global)',
-        desc: 'You\'ll lead the visual direction of brand identities that shipping to millions of people — from moodboard to motion system.',
-        skills: ['Brand Identity', 'Motion Design', 'Figma', 'Typography'],
-    },
-    {
-        id: '02',
-        title: 'Full-Stack Engineer',
-        department: 'Engineering',
-        type: 'Full-time · Remote',
-        location: 'Remote (Global)',
-        desc: 'Own the architecture and delivery of complex web platforms — headless commerce, SaaS dashboards, performance-first apps.',
-        skills: ['React', 'Node.js', 'TypeScript', 'PostgreSQL'],
-    },
-    {
-        id: '03',
-        title: 'Growth Strategist',
-        department: 'Strategy',
-        type: 'Full-time · Hybrid',
-        location: 'New York or Remote',
-        desc: 'You\'ll design and run growth loops for our portfolio of ambitious DTC and B2B brands — from paid acquisition to lifecycle.',
-        skills: ['Paid Social', 'CRO', 'Analytics', 'Experimentation'],
-    },
-    {
-        id: '04',
-        title: 'Content Director',
-        department: 'Creative',
-        type: 'Full-time · Remote',
-        location: 'Remote (Global)',
-        desc: 'Lead the editorial and creative direction of long-form content, campaign narratives, and brand storytelling across media.',
-        skills: ['Copywriting', 'Strategy', 'SEO', 'Storytelling'],
-    },
-    {
-        id: '05',
-        title: 'Motion Designer',
-        department: 'Design',
-        type: 'Contract · Remote',
-        location: 'Remote (Global)',
-        desc: 'Create cinematic motion assets — from micro-animations to full campaign films — for global brands we partner with.',
-        skills: ['After Effects', '3D', 'Cinema 4D', 'Spline'],
-    },
-];
+// Removed static roles array
 
 const perks = [
     { emoji: '🌍', title: 'Work from anywhere', desc: 'Fully distributed team. Build from wherever you do your best thinking.' },
@@ -66,6 +23,26 @@ const perks = [
 export default function Careers() {
     const pageRef = useRef(null);
     const [openRole, setOpenRole] = useState(null);
+    const [roles, setRoles] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Fetch roles from Firestore (one-shot — no persistent WebSocket)
+    useEffect(() => {
+        const q = query(collection(db, 'jobOpenings'), orderBy('createdAt', 'desc'));
+        getDocs(q)
+            .then((snapshot) => {
+                const data = [];
+                snapshot.forEach((doc) => data.push({ id: doc.id, ...doc.data() }));
+                setRoles(data);
+                ScrollTrigger.refresh();
+            })
+            .catch((error) => {
+                console.error('Error fetching jobs:', error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -110,11 +87,17 @@ export default function Careers() {
 
     return (
         <div ref={pageRef} className="bg-white text-black font-sans min-h-screen selection:bg-black selection:text-white">
+            <SEOHead
+                title="Careers — Join Viscano Creative Studio | Hyderabad & Visakhapatnam"
+                description="Join Viscano, a growing creative studio based in Hyderabad. We're hiring designers, engineers, and strategists across Hyderabad, Visakhapatnam, and remote roles across India."
+                keywords="design jobs Hyderabad, creative studio careers, UI UX designer jobs Hyderabad, web developer jobs Vizag, design agency jobs Visakhapatnam, Viscano careers"
+                canonical="https://viscano.com/careers"
+            />
 
             {/* ── HERO ── */}
             <section className="pt-36 pb-20 px-6 lg:px-20 max-w-[1400px] mx-auto">
 
-                <div className="car-sub flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-black/30 mb-10">
+                <div className="car-sub flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-black/55 mb-10">
                     <span className="w-6 h-[1px] bg-black/20" />
                     Careers at Viscano
                 </div>
@@ -199,7 +182,7 @@ export default function Careers() {
             </section>
 
             {/* ── OPEN ROLES ── */}
-            <section className="roles-section pb-20 px-6 lg:px-20 max-w-[1400px] mx-auto">
+            <section className="roles-section pb-20 px-6 lg:px-20 max-w-[1400px] mx-auto min-h-[400px]">
                 <div className="car-reveal flex items-end justify-between mb-12">
                     <div>
                         <p className="text-[10px] tracking-[0.22em] uppercase text-black/30 mb-3 flex items-center gap-3">
@@ -213,56 +196,74 @@ export default function Careers() {
                     </span>
                 </div>
 
-                <div className="border-t border-black/8">
-                    {roles.map((role) => (
-                        <div key={role.id} className="role-row">
-                            {/* Row header */}
-                            <button
-                                onClick={() => setOpenRole(openRole === role.id ? null : role.id)}
-                                className="group w-full text-left border-b border-black/8 py-7 flex items-center justify-between gap-6 hover:bg-[#F8F8F8] transition-all duration-200 px-4 -mx-4 rounded-xl"
-                            >
-                                <div className="flex items-center gap-6 min-w-0">
-                                    <span className="text-xs font-mono text-black/20 shrink-0">{role.id}</span>
-                                    <div className="min-w-0">
-                                        <div className="text-lg font-bold text-black group-hover:text-black mb-0.5 truncate">{role.title}</div>
-                                        <div className="flex flex-wrap items-center gap-3 text-[11px] text-black/40">
-                                            <span className="px-2.5 py-1 rounded-full bg-black/5 font-medium">{role.department}</span>
-                                            <span>{role.type}</span>
-                                            <span>·</span>
-                                            <span>{role.location}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={`w-9 h-9 rounded-full border flex items-center justify-center shrink-0 transition-all duration-300 ${openRole === role.id ? 'bg-black border-black' : 'border-black/15 group-hover:border-black'
-                                    }`}>
-                                    <svg className={`w-4 h-4 transition-all duration-300 ${openRole === role.id ? 'text-white rotate-45' : 'text-black'}`}
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                    </svg>
-                                </div>
-                            </button>
-
-                            {/* Expanded content */}
-                            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${openRole === role.id ? 'max-h-96' : 'max-h-0'}`}>
-                                <div className="px-4 py-7 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-start border-b border-black/8">
-                                    <div>
-                                        <p className="text-black/60 font-light leading-relaxed mb-6 max-w-2xl">{role.desc}</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {role.skills.map(s => (
-                                                <span key={s} className="px-3.5 py-1.5 rounded-full border border-black/10 text-xs font-medium text-black/60">{s}</span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <a href={`mailto:careers@viscano.com?subject=${encodeURIComponent('Application: ' + role.title)}`}
-                                        className="group shrink-0 inline-flex items-center gap-3 bg-black text-white px-6 py-3.5 rounded-full text-sm font-bold hover:bg-black/80 transition-all">
-                                        Apply now
-                                        <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                                    </a>
-                                </div>
-                            </div>
+                {loading ? (
+                    <div className="py-20 flex flex-col items-center justify-center text-black/30 border-t border-black/8">
+                        <div className="w-8 h-8 rounded-full border-2 border-black/10 border-t-black/40 animate-spin mb-4" />
+                        <p className="text-xs uppercase tracking-widest font-medium text-black/40">Loading positions</p>
+                    </div>
+                ) : roles.length === 0 ? (
+                    <div className="py-24 flex flex-col items-center text-center border-t border-black/8 bg-[#F8F8F8] rounded-3xl mt-4">
+                        <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-sm mb-6">
+                            <Search className="w-6 h-6 text-black/30" />
                         </div>
-                    ))}
-                </div>
+                        <h3 className="text-xl font-medium text-black mb-2">Currently we are not hiring</h3>
+                        <p className="text-black/50 font-light max-w-sm">We don't have any open positions at the moment, but we're always looking to connect with exceptional talent for future opportunities.</p>
+                    </div>
+                ) : (
+                    <div className="border-t border-black/8">
+                        {roles.map((role, index) => {
+                            const displayNumber = String(index + 1).padStart(2, '0');
+                            return (
+                                <div key={role.id} className="role-row">
+                                    {/* Row header */}
+                                    <button
+                                        onClick={() => setOpenRole(openRole === role.id ? null : role.id)}
+                                        className="group w-full text-left border-b border-black/8 py-7 flex items-center justify-between gap-6 hover:bg-[#F8F8F8] transition-all duration-200 px-4 -mx-4 rounded-xl"
+                                    >
+                                        <div className="flex items-center gap-6 min-w-0">
+                                            <span className="text-xs font-mono text-black/20 shrink-0">{displayNumber}</span>
+                                            <div className="min-w-0">
+                                                <div className="text-lg font-bold text-black group-hover:text-black mb-0.5 truncate">{role.title}</div>
+                                                <div className="flex flex-wrap items-center gap-3 text-[11px] text-black/40">
+                                                    <span className="px-2.5 py-1 rounded-full bg-black/5 font-medium">{role.department}</span>
+                                                    <span>{role.type}</span>
+                                                    <span>·</span>
+                                                    <span>{role.location}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className={`w-9 h-9 rounded-full border flex items-center justify-center shrink-0 transition-all duration-300 ${openRole === role.id ? 'bg-black border-black' : 'border-black/15 group-hover:border-black'
+                                            }`}>
+                                            <svg className={`w-4 h-4 transition-all duration-300 ${openRole === role.id ? 'text-white rotate-45' : 'text-black'}`}
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                            </svg>
+                                        </div>
+                                    </button>
+
+                                    {/* Expanded content */}
+                                    <div className={`overflow-hidden transition-all duration-500 ease-in-out ${openRole === role.id ? 'max-h-96' : 'max-h-0'}`}>
+                                        <div className="px-4 py-7 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-start border-b border-black/8">
+                                            <div>
+                                                <p className="text-black/60 font-light leading-relaxed mb-6 max-w-2xl">{role.desc}</p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {role.skills?.map(s => (
+                                                        <span key={s} className="px-3.5 py-1.5 rounded-full border border-black/10 text-xs font-medium text-black/60">{s}</span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <a href={`mailto:careers@viscano.com?subject=${encodeURIComponent('Application: ' + role.title)}`}
+                                                className="group shrink-0 inline-flex items-center gap-3 bg-black text-white px-6 py-3.5 rounded-full text-sm font-bold hover:bg-black/80 transition-all">
+                                                Apply now
+                                                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </section>
 
             {/* ── OPEN APPLICATION ── */}

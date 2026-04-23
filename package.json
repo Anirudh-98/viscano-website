@@ -6,15 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "react-snap",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "firebase": "^12.10.0",
     "framer-motion": "^12.34.3",
     "gsap": "^3.14.2",
     "lucide-react": "^0.575.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.13.1"
   },
   "devDependencies": {
@@ -28,7 +31,72 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "postcss": "^8.5.6",
+    "react-snap": "^1.23.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.19",
     "vite": "^7.3.1"
+  },
+  "reactSnap": {
+    "source": "dist",
+    "destination": "dist",
+    "include": [
+      "/",
+      "/services",
+      "/services/digital-platforms",
+      "/services/brand-creative",
+      "/services/media-production",
+      "/services/growth-distribution",
+      "/services/web-development",
+      "/services/saas-products",
+      "/services/ecommerce",
+      "/services/mobile-apps",
+      "/services/brand-identity",
+      "/services/logo-design",
+      "/services/ui-ux-design",
+      "/services/pitch-deck",
+      "/services/photography",
+      "/services/social-media-content",
+      "/services/digital-marketing",
+      "/services/analytics-optimization",
+      "/services/rdf-motion-video",
+      "/results",
+      "/process",
+      "/insights",
+      "/about",
+      "/team",
+      "/contact",
+      "/careers",
+      "/blog",
+      "/blog/leading-creative-studio-hyderabad-visakhapatnam",
+      "/blog/why-your-logo-is-the-last-thing-your-brand-needs",
+      "/blog/the-5-second-rule-for-ui-that-converts",
+      "/blog/building-fast-vite-react-and-shipping-on-day-1",
+      "/blog/the-prd-as-a-design-brief-how-we-scope-projects-differently",
+      "/blog/motion-design-isnt-decoration-its-communication",
+      "/blog/rebranding-without-losing-your-audience",
+      "/pricing",
+      "/learn",
+      "/rdf"
+    ],
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--disable-gpu"
+    ],
+    "puppeteer": {
+      "timeout": 60000
+    },
+    "renderAfterTime": 4000,
+    "skipThirdPartyRequests": true,
+    "concurrency": 4,
+    "minifyHtml": {
+      "collapseWhitespace": false,
+      "removeComments": false
+    },
+    "headless": true,
+    "inlineCss": false,
+    "saveAs": "html"
   }
 }

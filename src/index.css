@@ -1,22 +1,56 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+/* ─────────────────────────────────────────────
+   TYPOGRAPHY SYSTEM
+   Display / Hero   → DM Serif Display (font-serif)
+   Heading / Body   → Neue Haas Grotesk → system Helvetica Neue → Inter fallback (font-sans)
+   Monospace        → DM Mono (font-mono)
+   Fonts loaded via <link> in index.html for preload performance.
+───────────────────────────────────────────── */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── CSS Custom Properties ─────────────────────────────────
+   Mirror the Tailwind tokens so they can be referenced in
+   arbitrary CSS (box-shadow, clip-path, etc.)
+──────────────────────────────────────────────────────────── */
+:root {
+  --obsidian:   #0A0A0A;
+  --surface:    #0F0F0F;
+  --off-white:  #F5F3EE;
+  --mid-grey:   #555555;
+  --sec-green:  #1A7A4A;
+  --signal-red: #C0392B;
+  --royal-blue: #1A5CA8;
+}
+
 @layer base {
   body {
-    @apply text-white font-sans antialiased overflow-x-hidden bg-[#0A0A0A];
+    /* Off-White as default text — pure #fff reserved for emphasis */
+    @apply font-sans antialiased overflow-x-hidden;
+    background-color: var(--obsidian);
+    color: var(--off-white);
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight font-bold;
+    /* Headings stay near-white for contrast on dark surfaces */
+    color: #FFFFFF;
   }
+
+  a {
+    color: inherit;
+  }
+
+  /* Explicit utility overrides so the token names work inline */
+  .text-off-white  { color: var(--off-white); }
+  .text-mid-grey   { color: var(--mid-grey); }
+  .bg-obsidian     { background-color: var(--obsidian); }
+  .bg-surface      { background-color: var(--surface); }
+  .text-sec-green  { color: var(--sec-green); }
+  .border-sec-green { border-color: var(--sec-green); }
+  .text-signal-red { color: var(--signal-red); }
+  .text-royal-blue { color: var(--royal-blue); }
 }
 
 @layer utilities {

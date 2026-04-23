@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
+import SEOHead from '../components/SEOHead';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, ArrowDownRight, ArrowDown } from 'lucide-react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase';
 import heroVideo from '../assets/herobackground.mp4';
 import IntroAnimation from "../components/ui/scroll-morph-hero";
 import OurProcessInfographic from "../components/ui/our-process-infographic";
@@ -42,7 +45,24 @@ function CtaForm() {
     const canNext2 = selectedBudget !== '';
     const canSubmit = form.name.trim() && /\S+@\S+\.\S+/.test(form.email);
 
-    const handleSubmit = () => setSubmitted(true);
+    const handleSubmit = async () => {
+        try {
+            await addDoc(collection(db, 'leads'), {
+                name: form.name,
+                email: form.email,
+                message: form.message,
+                services: selectedServices,
+                budget: selectedBudget,
+                createdAt: serverTimestamp(),
+                status: 'new'
+            });
+            setSubmitted(true);
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            // In a real app we might show a toast, but this matches existing flow
+            setSubmitted(true);
+        }
+    };
 
     const stepLabels = ['Services', 'Budget', 'Details'];
 
@@ -281,40 +301,28 @@ export default function Home() {
         {
             title: "Brand Identity",
             items: ["Logo Design", "Typography", "Visual Language", "Pitch Deck Design", "Brand Guidelines"],
-            image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80"
+            image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=600&fm=webp"
         },
         {
             title: "Product Design",
             items: ["User Interface (UI)", "User Experience (UX)", "Wireframing", "Prototyping", "Design Systems"],
-            image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80"
+            image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=600&fm=webp"
         },
         {
             title: "Development",
             items: ["Front-End Dev", "Back-End Dev", "No-Code (Framer/Shopify)", "CMS Integration", "Web Apps"],
-            image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80"
+            image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=600&fm=webp"
         },
         {
             title: "Motion & Content",
             items: ["Motion Design", "3D Animation", "Video Editing", "Copywriting", "Social Media"],
-            image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80"
+            image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=600&fm=webp"
         }
     ];
 
     useEffect(() => {
         // Hero Animation
         const ctx = gsap.context(() => {
-            // Animate hero text words from bottom up
-            gsap.fromTo(".hero-word",
-                { y: 150, opacity: 0 },
-                { y: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: "power4.out", delay: 0.2 }
-            );
-
-            // Animate small text and elements
-            gsap.fromTo(".hero-fade",
-                { opacity: 0 },
-                { opacity: 1, duration: 2, ease: "power2.out", delay: 1 }
-            );
-
             // Scroll Reveal Portfolio Cards
             gsap.utils.toArray('.reveal-card').forEach((card) => {
                 gsap.fromTo(card,
@@ -342,17 +350,6 @@ export default function Home() {
                 );
             }
 
-            // Animate Our Process section elements
-            gsap.fromTo(".process-fade-element",
-                { y: 50, opacity: 0 },
-                {
-                    y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: ".process-section-trigger",
-                        start: "top 75%",
-                    }
-                }
-            );
 
         }, containerRef);
 
@@ -361,107 +358,80 @@ export default function Home() {
 
     return (
         <div ref={containerRef} className="bg-[#0A0A0A] text-white relative w-full overflow-hidden font-sans selection:bg-white selection:text-black">
+            <SEOHead
+                title="Viscano — Global Creative Studio | Branding, Web Design & Development"
+                description="Viscano is a global creative studio building bold brand identities, UI/UX design, and high-performance websites for ambitious businesses worldwide."
+                keywords="creative studio, brand identity, web design, UI UX design, global creative studio, branding agency, startup branding, Viscano"
+                canonical="https://viscano.com/"
+            />
 
-            {/* 1. HERO — Redesigned */}
-            <section ref={heroRef} className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden bg-[#080808]">
-
-                {/* Grain noise texture overlay */}
-                <svg className="absolute inset-0 w-full h-full z-0 opacity-[0.035] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-                    <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter>
-                    <rect width="100%" height="100%" filter="url(#noise)" />
-                </svg>
-
-                {/* Subtle radial glow */}
-                <div className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[70vw] h-[50vh] bg-white/[0.025] blur-[140px] rounded-full pointer-events-none z-0" />
-
-                {/* Background video — subtle, deeply faded */}
-                <video autoPlay loop muted playsInline
-                    className="absolute inset-0 w-full h-full object-cover z-0 opacity-[0.12] mix-blend-luminosity grayscale">
-                    <source src={heroVideo} type="video/mp4" />
+            {/* 1. HERO — NEW WEB3 REDESIGN */}
+            <header className="relative w-full h-screen overflow-hidden bg-black font-sans">
+                {/* Background Video */}
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover z-0"
+                >
+                    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260217_030345_246c0224-10a4-422c-b324-070b7c0eceda.mp4" type="video/mp4" />
                 </video>
 
-                {/* ── TOP ROW ── */}
-                <div className="relative z-10 flex items-center justify-between px-6 lg:px-16 pt-36">
-                    {/* <div className="hero-fade flex items-center gap-3">
-                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                        <span className="text-[10px] tracking-[0.25em] uppercase text-white/40">Available for projects · 2025</span>
-                    </div> */}
-                    <div className="hero-fade hidden md:flex items-center gap-4 text-[10px] tracking-[0.2em] uppercase text-white/25">
-                        <span>Brand</span><span className="w-1 h-1 rounded-full bg-white/20" />
-                        <span>Product</span><span className="w-1 h-1 rounded-full bg-white/20" />
-                        <span>Growth</span><span className="w-1 h-1 rounded-full bg-white/20" />
-                        <span>Content</span>
-                    </div>
-                </div>
+                {/* 50% Black Overlay */}
+                <div className="absolute inset-0 bg-black/50 z-10" />
 
-                {/* ── MAIN HEADLINE ── */}
-                <div className="relative z-10 flex flex-col justify-center flex-1 px-6 lg:px-16 pt-12 pb-4">
+                {/* Hero Content */}
+                <div className="relative z-20 flex flex-col items-center justify-center text-center px-6 h-full pb-[102px] pt-[120px] md:pt-[180px]">
+                    <div className="flex flex-col items-center gap-[30px] max-w-full">
 
-                    {/* Line 1 */}
-                    <div className="overflow-visible pb-2 mb-1">
-                        <h1 className="hero-word text-[clamp(3.2rem,9.5vw,10rem)] font-serif font-light text-white leading-[1.0] tracking-tight">
-                            We engineer brands
+                        {/* H2 (Subheadline) */}
+                        <div className="inline-flex items-center gap-[6px] px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+                            <h2 className="text-white text-[12px] md:text-[14px] font-medium tracking-[0.2em] uppercase leading-none opacity-80">
+                                India's AI-Native Creative Studio.
+                            </h2>
+                        </div>
+
+                        {/* H1 (Hero Headline) */}
+                        <h1
+                            className="text-[48px] md:text-[86px] lg:text-[100px] font-medium leading-[1.1] tracking-tighter max-w-[900px] lg:max-w-[1100px]"
+                            style={{
+                                background: 'linear-gradient(144.5deg, #FFFFFF 28%, rgba(255, 255, 255, 0.4) 115%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text',
+                                color: 'transparent'
+                            }}
+                        >
+                            Brands That Look Like Everyone Else, Die Like Everyone Else.
                         </h1>
-                    </div>
 
-                    {/* Line 2 */}
-                    <div className="overflow-visible pb-2 mb-12">
-                        <h1 className="hero-word text-[clamp(3.2rem,9.5vw,10rem)] font-serif italic font-light text-white/25 leading-[1.0] tracking-tight">
-                            that scale.
-                        </h1>
-                    </div>
-
-                    {/* Sub-row */}
-                    <div className="hero-fade grid grid-cols-1 md:grid-cols-3 gap-10 items-end border-t border-white/8 pt-10">
-                        <p className="text-white/40 text-base font-light leading-relaxed max-w-sm md:col-span-2">
-                            A full-service creative studio. We build the visual identity, digital product, and growth engine your brand needs to win — all under one roof.
+                        {/* Supporting SEO Text */}
+                        <p className="text-white/60 text-[14px] md:text-[17px] font-normal leading-relaxed max-w-[720px] -mt-[10px]">
+                            We are Viscano — a global creative studio specializing in brand identity, product design, and web development.
                         </p>
-                        <div className="flex md:justify-end gap-4">
-                            <Link to="/solutions"
-                                className="group inline-flex items-center gap-3 bg-white text-black px-7 py-3.5 rounded-full text-sm font-bold hover:bg-white/80 transition-all">
-                                Our Services
-                                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                            </Link>
-                            <Link to="/results"
-                                className="group inline-flex items-center gap-3 border border-white/15 text-white px-7 py-3.5 rounded-full text-sm font-medium hover:border-white/40 transition-all">
-                                View Work
+
+                        {/* CTA Buttons */}
+                        <div className="flex flex-col sm:flex-row items-center gap-4 mt-[10px]">
+                            {/* Primary Button: See Our Work */}
+                            <div className="relative group">
+                                <div className="absolute -inset-[0.6px] bg-white rounded-full opacity-100" />
+                                <Link to="/results" className="relative bg-white text-black text-[14px] font-semibold px-[32px] py-[13px] rounded-full flex items-center justify-center overflow-hidden transition-all hover:bg-zinc-100">
+                                    {/* Glow Streak */}
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-2 bg-white/80 blur-lg rounded-full pointer-events-none" />
+                                    See Our Work →
+                                </Link>
+                            </div>
+
+                            {/* Secondary Button: Start a Project */}
+                            <Link to="/contact" className="px-[32px] py-[13px] rounded-full border border-white/20 text-[14px] font-medium text-white hover:bg-white/10 hover:border-white/40 transition-all backdrop-blur-sm">
+                                Start a Project
                             </Link>
                         </div>
+
                     </div>
                 </div>
-
-                {/* ── MARQUEE STRIP ── */}
-                <div className="hero-fade relative z-10 border-t border-b border-white/[0.07] py-4 overflow-hidden">
-                    <div className="flex whitespace-nowrap animate-[marquee_22s_linear_infinite]">
-                        {[...Array(3)].map((_, i) => (
-                            <span key={i} className="flex items-center gap-10 px-10 text-[11px] tracking-[0.22em] uppercase text-white/20 shrink-0">
-                                <span>Brand Identity</span><span className="w-1 h-1 rounded-full bg-white/15" />
-                                <span>Product Design</span><span className="w-1 h-1 rounded-full bg-white/15" />
-                                <span>Web Development</span><span className="w-1 h-1 rounded-full bg-white/15" />
-                                <span>Motion &amp; Content</span><span className="w-1 h-1 rounded-full bg-white/15" />
-                                <span>Growth Systems</span><span className="w-1 h-1 rounded-full bg-white/15" />
-                                <span>UI / UX Design</span><span className="w-1 h-1 rounded-full bg-white/15" />
-                            </span>
-                        ))}
-                    </div>
-                </div>
-
-                {/* ── BOTTOM STAT BAR ── */}
-                <div className="hero-fade relative z-10 grid grid-cols-2 md:grid-cols-4 divide-x divide-white/[0.07] border-t border-white/[0.07]">
-                    {[
-                        { n: '10+', l: 'Projects Delivered' },
-                        { n: '₹ 1M+', l: 'Client Revenue' },
-                        { n: '94%', l: 'Client Renewal' },
-                        { n: '9+', l: 'Years Active' },
-                    ].map((s, i) => (
-                        <div key={i} className="py-6 px-8 flex flex-col gap-1">
-                            <span className="text-2xl font-serif font-light text-white">{s.n}</span>
-                            <span className="text-[9px] tracking-[0.2em] uppercase text-white/25">{s.l}</span>
-                        </div>
-                    ))}
-                </div>
-
-            </section>
+            </header>
 
             {/* 1.5 ABOUT SECTION */}
             <section ref={aboutRef} className="py-24 md:py-32 px-6 md:px-12 lg:px-24 bg-[#0A0A0A] relative z-20 flex flex-col lg:flex-row gap-16 lg:gap-24 items-start mx-auto max-w-[1600px]">
@@ -676,150 +646,526 @@ export default function Home() {
 
 
 
+            {/* S3. IDEOLOGY / MANIFESTO */}
+            <section className="relative z-20 bg-[#080809] py-24 md:py-36 px-6 md:px-12 lg:px-24 overflow-hidden">
+
+                {/* Subtle grain */}
+                <svg className="absolute inset-0 w-full h-full z-0 opacity-[0.025] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                    <filter id="manifesto-noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter>
+                    <rect width="100%" height="100%" filter="url(#manifesto-noise)" />
+                </svg>
+
+                <div className="relative z-10 max-w-[1200px] mx-auto flex flex-col gap-16 md:gap-20">
+
+                    {/* Section label */}
+                    <div className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-white/55">
+                        <span className="w-6 h-[1px] bg-white/40" />
+                        Our Ideology
+                    </div>
+
+                    {/* Headline */}
+                    <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-[1.05] max-w-[900px]">
+                        Most Indian startups are built to fail —{' '}
+                        <span className="text-white/35 italic font-serif font-light">visually.</span>
+                    </h2>
+
+                    {/* 3-column problem grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {[
+                            'They settled for cheap freelancers',
+                            'They got a website, not a brand system',
+                            'They look like their 10 nearest competitors',
+                        ].map((problem, i) => (
+                            <div
+                                key={i}
+                                className="group relative bg-white/[0.03] border border-white/[0.07] rounded-2xl p-8 md:p-10 flex flex-col gap-6 hover:border-white/[0.14] transition-all duration-500 overflow-hidden"
+                            >
+                                {/* Number */}
+                                <span className="text-[10px] font-mono tracking-[0.3em] text-white/20 uppercase">
+                                    0{i + 1}
+                                </span>
+
+                                {/* Problem text with strikethrough */}
+                                <p className="text-xl md:text-2xl font-semibold text-white/70 leading-snug tracking-tight relative">
+                                    <span className="relative inline">
+                                        {problem}
+                                        {/* Strikethrough line */}
+                                        <span className="absolute left-0 top-1/2 w-full h-[1.5px] bg-white/40 block -translate-y-1/2" />
+                                    </span>
+                                </p>
+
+                                {/* Faint corner accent */}
+                                <div className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full border border-white/[0.04] pointer-events-none" />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Bridge statement */}
+                    <div className="border-t border-white/[0.07] pt-12 md:pt-16 flex flex-col md:flex-row gap-8 md:gap-20 items-start">
+                        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/55 shrink-0 mt-1">The Fix</span>
+                        <p className="text-xl md:text-2xl lg:text-3xl font-medium text-white/85 leading-relaxed tracking-tight max-w-[700px]">
+                            We built Viscano to solve exactly this. We are not a vendor.{' '}
+                            <span className="text-white italic font-serif font-light">We are your first brand partner.</span>
+                        </p>
+                    </div>
+
+                    {/* Pull quote */}
+                    <div className="relative bg-white/[0.02] border border-white/[0.06] rounded-3xl px-8 md:px-16 py-12 md:py-16 flex flex-col gap-6 overflow-hidden">
+                        {/* Large quotation mark */}
+                        <span className="absolute -top-4 left-8 md:left-14 text-[120px] md:text-[180px] font-serif text-white/[0.04] leading-none select-none pointer-events-none">"</span>
+
+                        <p className="relative text-[40px] md:text-[56px] lg:text-[64px] font-bold tracking-tighter text-white leading-[1.08] max-w-[860px]">
+                            157,000 startups in India.
+                            <br />
+                            <span className="text-white/40">Only 1% have a brand worth remembering.</span>
+                            <br />
+                            We build the other 1%.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
             {/* 3. OUR PROCESS (INFOGRAPHIC BENTO GRID) */}
             <OurProcessInfographic />
 
-            {/* 4. ABOUT & PORTFOLIO REVEAL */}
-            <section className="bg-black text-white relative z-20 pt-24 pb-32">
+            {/* S6. THE VISCANO DIFFERENCE — AI + SPEED + SECURITY */}
+            <section className="relative z-20 bg-[#050507] py-24 md:py-36 px-6 md:px-12 lg:px-24 overflow-hidden">
 
-                {/* About Us & Stats */}
-                <div className="max-w-[1000px] mx-auto px-6 md:px-12 flex flex-col items-center text-center mb-32">
-                    <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-10">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                        </svg>
-                        <span className="text-xs font-semibold tracking-wide text-white/80">About Us</span>
+                {/* Grain */}
+                <svg className="absolute inset-0 w-full h-full z-0 opacity-[0.02] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                    <filter id="diff-noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter>
+                    <rect width="100%" height="100%" filter="url(#diff-noise)" />
+                </svg>
+
+                <div className="relative z-10 max-w-[1200px] mx-auto flex flex-col gap-16 md:gap-20">
+
+                    {/* Header */}
+                    <div className="flex flex-col gap-6">
+                        <div className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-white/55">
+                            <span className="w-6 h-[1px] bg-white/40" />
+                            Why Viscano
+                        </div>
+                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-[1.05] max-w-[900px]">
+                            We Deliver in Weeks.{' '}
+                            <span className="text-white/40 font-serif italic font-light">Built to Last.</span>
+                            <br />Secured from Day One.
+                        </h2>
                     </div>
 
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight text-white/90 leading-[1.4] mb-24">
-                        We help ambitious brands and<br className="hidden md:block" /> startups build digital products that<br className="hidden md:block" /> stand out and scale. We believe in<br className="hidden md:block" /> working smart, building fast, and<br className="hidden md:block" /> designing <span className="text-white/50 italic font-serif">with purpose.</span>
-                    </h2>
+                    {/* 4-column stat block */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-                    <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-6 border-t border-white/10 pt-10 text-left">
-                        <div className="flex flex-col gap-4">
-                            <span className="text-[10px] uppercase tracking-widest text-white/40 font-semibold">Projects Launched</span>
-                            <span className="text-5xl md:text-7xl tracking-tighter font-mono font-medium text-white/90">10+</span>
-                        </div>
-                        <div className="flex flex-col gap-4 md:items-center text-left md:text-center">
-                            <span className="text-[10px] uppercase tracking-widest text-white/40 font-semibold w-full">Years Of Experience</span>
-                            <span className="text-5xl md:text-7xl tracking-tighter font-mono font-medium text-white/90 w-full">9+</span>
-                        </div>
-                        <div className="flex flex-col gap-4 md:items-end text-left md:text-right">
-                            <span className="text-[10px] uppercase tracking-widest text-white/40 font-semibold w-full">Happy Clients</span>
-                            <span className="text-5xl md:text-7xl tracking-tighter font-mono font-medium text-white/90 w-full">10+</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Scrolling Reveal Cards */}
-                <div className="w-full max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 flex flex-col gap-12 md:gap-24">
-                    {[
-                        {
-                            id: '01',
-                            title: 'KUSUM GANJI',
-                            desc: 'Portfolio website for Telugu influencer Kusum Ganji',
-                            tags: ['Portfolio', 'Brand'],
-                            url: 'https://kusumganji.com/',
-                            imgUrl: '/kusum.png',
-                            bg: 'from-[#1A1A1A] to-[#0A0A0A]'
-                        },
-                        {
-                            id: '02',
-                            title: 'THE FEHU CODE',
-                            desc: 'E-commerce platform for heritage-themed brand',
-                            tags: ['E-Commerce', 'Development'],
-                            url: 'https://www.fehu.org.in/',
-                            imgUrl: '/fehu.png',
-                            bg: 'from-[#151515] to-[#050505]'
-                        },
-                        {
-                            id: '03',
-                            title: 'GROX DIGITAL',
-                            desc: 'Custom website for Grox Digital Pvt. Ltd.',
-                            tags: ['Web Development', 'Brand'],
-                            url: 'https://grox.digital/',
-                            imgUrl: '/grox.png',
-                            bg: 'from-[#1c1c1c] to-[#000000]'
-                        },
-                        {
-                            id: '04',
-                            title: 'SHERPAL',
-                            desc: 'AI-powered platform website for Sherpal',
-                            tags: ['Web Design', 'Development'],
-                            url: 'https://sherpalai.com/',
-                            imgUrl: '/sherpal.png',
-                            bg: 'from-[#111] to-[#050505]'
-                        },
-                        {
-                            id: '05',
-                            title: 'DELTA HRMS',
-                            desc: 'HR management SaaS product website',
-                            tags: ['SaaS', 'UI/UX'],
-                            url: 'https://deltahrms.com/',
-                            imgUrl: '/deltahrms.png',
-                            bg: 'from-[#181818] to-[#080808]'
-                        },
-                        {
-                            id: '06',
-                            title: 'LAXMI DEVELOPERS',
-                            desc: 'Real estate developer brand & web presence',
-                            tags: ['Real Estate', 'Brand'],
-                            url: 'https://www.laxmideveloper.com/',
-                            imgUrl: '/laxmidevlopers.png',
-                            bg: 'from-[#141414] to-[#000]'
-                        },
-                    ].map((project, i) => (
-                        <a
-                            key={project.id}
-                            href={project.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="reveal-card relative w-full h-[65vh] md:h-[75vh] rounded-[2rem] md:rounded-[3rem] overflow-hidden border border-white/5 group shadow-[0_20px_50px_rgba(0,0,0,0.8)] block"
-                        >
-                            {/* Screenshot background */}
-                            <div className={`absolute inset-0 bg-gradient-to-b ${project.bg} z-0`} />
-                            <img
-                                src={project.imgUrl}
-                                alt={project.title}
-                                loading="lazy"
-                                className="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700 z-[1]"
-                            />
-                            {/* Gradient overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent z-[2]" />
-
-                            {/* Top Left: Tags */}
-                            <div className="absolute top-8 left-8 md:top-12 md:left-12 flex flex-wrap gap-2 z-20">
-                                {project.tags.map((tag, idx) => (
-                                    <span key={idx} className="bg-white/10 border border-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] md:text-xs font-semibold text-white/80">
-                                        {tag}
-                                    </span>
-                                ))}
+                        {/* Col 1 — 2 Weeks */}
+                        <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-8 flex flex-col gap-4 hover:border-white/[0.15] transition-all duration-500 group">
+                            <span className="text-[10px] font-mono tracking-[0.3em] text-white/55 uppercase">Brand Identity</span>
+                            <div className="flex items-end gap-2">
+                                <span className="text-6xl md:text-7xl font-bold tracking-tighter text-white leading-none" data-counter="2">2</span>
+                                <span className="text-2xl font-bold text-white/60 mb-1">Wks</span>
                             </div>
+                            <div className="h-[1px] w-full bg-white/[0.06]" />
+                            <p className="text-xs text-white/35 leading-relaxed font-medium">
+                                Delivery guarantee.<br />
+                                <span className="text-white/20">Industry avg: 6–8 weeks</span>
+                            </p>
+                        </div>
 
-                            {/* Top Right: External link indicator */}
-                            <div className="absolute top-8 right-8 md:top-12 md:right-12 w-10 h-10 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
+                        {/* Col 2 — 4 Weeks */}
+                        <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-8 flex flex-col gap-4 hover:border-white/[0.15] transition-all duration-500 group">
+                            <span className="text-[10px] font-mono tracking-[0.3em] text-white/55 uppercase">Full Website</span>
+                            <div className="flex items-end gap-2">
+                                <span className="text-6xl md:text-7xl font-bold tracking-tighter text-white leading-none" data-counter="4">4</span>
+                                <span className="text-2xl font-bold text-white/60 mb-1">Wks</span>
+                            </div>
+                            <div className="h-[1px] w-full bg-white/[0.06]" />
+                            <p className="text-xs text-white/35 leading-relaxed font-medium">
+                                Live & launched.<br />
+                                <span className="text-white/20">Industry avg: 12–16 weeks</span>
+                            </p>
+                        </div>
+
+                        {/* Col 3 — 1 Roof */}
+                        <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-8 flex flex-col gap-4 hover:border-white/[0.15] transition-all duration-500 group">
+                            <span className="text-[10px] font-mono tracking-[0.3em] text-white/55 uppercase">One Studio</span>
+                            <div className="flex items-end gap-2">
+                                <span className="text-6xl md:text-7xl font-bold tracking-tighter text-white leading-none">1</span>
+                                <span className="text-2xl font-bold text-white/60 mb-1">Roof</span>
+                            </div>
+                            <div className="h-[1px] w-full bg-white/[0.06]" />
+                            <p className="text-xs text-white/35 leading-relaxed font-medium">
+                                Strategy · Design · Dev · Motion.<br />
+                                <span className="text-white/20">Zero agency handoffs</span>
+                            </p>
+                        </div>
+
+                        {/* Col 4 — Security (Security Green #1A7A4A) */}
+                        <div className="relative rounded-2xl p-8 flex flex-col gap-4 transition-all duration-500 group overflow-hidden"
+                            style={{ background: '#060e09', border: '1px solid rgba(26,122,74,0.25)', boxShadow: '0 0 40px -8px rgba(26,122,74,0.12)' }}>
+                            {/* Faint green radial glow */}
+                            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full blur-2xl pointer-events-none" style={{ background: 'rgba(26,122,74,0.08)' }} />
+
+                            <span className="text-[10px] font-mono tracking-[0.3em] uppercase" style={{ color: 'rgba(26,122,74,0.7)' }}>Security</span>
+                            <div className="flex items-end gap-3">
+                                {/* Shield icon */}
+                                <svg width="52" height="58" viewBox="0 0 52 58" fill="none" style={{ color: '#1A7A4A' }} className="mb-1 shrink-0">
+                                    <path d="M26 2L4 11v18c0 13.25 9.4 25.65 22 29 12.6-3.35 22-15.75 22-29V11L26 2z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" fill="none" />
+                                    <path d="M16 28l7 7 13-13" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                                <span className="text-2xl font-bold mb-1 leading-tight" style={{ color: 'rgba(26,122,74,0.9)' }}>Zero<br />Compromises</span>
+                            </div>
+                            <div className="h-[1px] w-full" style={{ background: 'rgba(26,122,74,0.12)' }} />
+                            <p className="text-xs leading-relaxed font-medium" style={{ color: 'rgba(26,122,74,0.45)' }}>
+                                Cybersecurity-grade architecture.<br />
+                                <span style={{ color: 'rgba(26,122,74,0.3)' }}>Baked in, not bolted on</span>
+                            </p>
+                        </div>
+
+                    </div>
+
+                    {/* Security callout block */}
+                    <div className="relative rounded-3xl p-10 md:p-14 flex flex-col md:flex-row gap-10 md:gap-16 overflow-hidden"
+                        style={{ background: '#060e09', border: '1px solid rgba(26,122,74,0.18)', boxShadow: '0 0 80px -20px rgba(26,122,74,0.08)' }}>
+                        {/* Green corner glow */}
+                        <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full blur-3xl pointer-events-none" style={{ background: 'rgba(26,122,74,0.05)' }} />
+
+                        {/* Left — icon + headline */}
+                        <div className="flex flex-col gap-5 shrink-0 md:w-[280px]">
+                            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: 'rgba(26,122,74,0.1)', border: '1px solid rgba(26,122,74,0.25)' }}>
+                                <svg width="22" height="24" viewBox="0 0 52 58" fill="none" style={{ color: '#1A7A4A' }}>
+                                    <path d="M26 2L4 11v18c0 13.25 9.4 25.65 22 29 12.6-3.35 22-15.75 22-29V11L26 2z" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" fill="none" />
+                                    <path d="M16 28l7 7 13-13" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
+                            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
+                                Security-First<br />Development
+                            </h3>
+                            <span className="inline-flex self-start text-[9px] tracking-[0.2em] uppercase font-bold px-3 py-1.5 rounded-full" style={{ color: 'rgba(26,122,74,0.8)', background: 'rgba(26,122,74,0.08)', border: '1px solid rgba(26,122,74,0.2)' }}>
+                                Masters in Cybersecurity
+                            </span>
+                        </div>
 
-                            {/* Bottom Left: Title + desc */}
-                            <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 z-20 max-w-xl">
-                                <p className="text-white/50 text-xs md:text-sm font-medium mb-2">{project.desc}</p>
-                                <h3 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white/90 group-hover:text-white transition-colors leading-[1.05]">
-                                    {project.title}
-                                </h3>
-                            </div>
+                        {/* Right — copy + tag */}
+                        <div className="flex flex-col gap-6 justify-center">
+                            <p className="text-base md:text-lg text-white/55 leading-relaxed font-light max-w-[580px]">
+                                Most design agencies build beautiful products with invisible vulnerabilities. Viscano is led by a Cybersecurity Masters graduate with years in enterprise IT. We bake security in at the architecture level —{' '}
+                                <span className="text-white/80 font-medium">not as an afterthought.</span>
+                            </p>
+                            <span className="text-[10px] tracking-[0.2em] uppercase text-white/55 font-semibold">
+                                Trusted by SaaS founders, healthtech teams & fintech brands
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Bottom row — AI badge + CTA */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+
+                        {/* AI badge */}
+                        <div className="inline-flex items-center gap-3 bg-white/[0.04] border border-white/[0.08] rounded-full px-5 py-3">
+                            <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse shrink-0" />
+                            <span className="text-[11px] md:text-xs font-semibold tracking-wide text-white/60">
+                                AI-Augmented Workflow
+                                <span className="text-white/30 mx-2">→</span>
+                                Faster delivery, Same premium quality
+                            </span>
+                        </div>
+
+                        {/* CTA */}
+                        <a href="/process" className="flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-black text-sm font-bold hover:scale-[1.03] transition-all duration-200 shrink-0">
+                            See How We Work
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
                         </a>
-                    ))}
 
-                    {/* View All Projects Button */}
-                    <div className="w-full flex justify-center mt-12 mb-8">
-                        <Link to="/portfolio" className="bg-white text-black px-8 py-3 rounded-full text-sm font-semibold flex items-center gap-3 hover:scale-105 transition-transform duration-300">
+                    </div>
+
+                </div>
+            </section>
+
+            {/* 3.5 VISCANO LEARN BANNER */}
+            <section className="relative z-20 bg-[#0A0A0A] px-4 md:px-8 lg:px-12 pb-4">
+                <div className="max-w-[1500px] mx-auto">
+                    <a
+                        href="https://learn.viscano.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="reveal-card group block bg-[#111113] border border-white/[0.07] hover:border-white/20 rounded-[2.5rem] p-4 md:p-6 transition-all duration-500 hover:bg-[#161618] w-full overflow-hidden"
+                    >
+                        <div className="flex flex-col items-center">
+                            {/* Featured Image Container */}
+                            <div className="w-full relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-black aspect-video md:aspect-[24/9] mb-8 md:mb-12">
+                                <img
+                                    src="/vacademy.png"
+                                    alt="Viscano Learn"
+                                    className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-[1.03]"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#111113]/60 via-transparent to-transparent opacity-80" />
+                            </div>
+
+                            {/* Content Below Image */}
+                            <div className="flex flex-col items-center max-w-[850px] px-4 md:px-6 text-center pb-8 md:pb-12">
+                                <div className="flex flex-wrap items-center gap-2 mb-6 justify-center">
+                                    <span className="text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 rounded-full" style={{ color: '#1A5CA8', background: 'rgba(26,92,168,0.1)', border: '1px solid rgba(26,92,168,0.2)' }}>New Platform</span>
+                                    <span className="text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-white/30 px-3 py-1.5 bg-white/5 rounded-full border border-white/10">Learn • Automate • Scale</span>
+                                </div>
+
+                                <h3 className="text-2xl md:text-5xl font-serif font-light text-white mb-6 md:mb-8 tracking-tight leading-[1.2] md:leading-[1.1]">
+                                    Viscano Learn — Expert-led courses, <br className="hidden md:block" />
+                                    live classes & mentorship.
+                                </h3>
+
+                                <p className="text-white/50 text-sm md:text-lg font-light mb-10 md:mb-12 max-w-[700px] leading-relaxed">
+                                    Unlock the full potential of your business with our specialized curriculum. From AI workflow integration to advanced digital systems, we teach you how to build the future of work.
+                                </p>
+
+                                <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-6 w-full sm:w-auto">
+                                    <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 md:px-12 py-3.5 md:py-4 rounded-full bg-white text-black text-xs md:text-sm font-bold hover:scale-[1.05] transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.15)] cursor-pointer">
+                                        Explore Courses
+                                        <ArrowUpRight className="w-4 h-4" />
+                                    </div>
+                                    <Link
+                                        to="/learn"
+                                        onClick={e => e.stopPropagation()}
+                                        className="w-full sm:w-auto px-8 md:px-12 py-3.5 md:py-4 rounded-full border border-white/10 text-xs md:text-sm font-semibold text-white/70 hover:text-white hover:bg-white/5 hover:border-white/30 transition-all duration-200"
+                                    >
+                                        Platform Overview
+                                    </Link>
+                                </div>
+
+                                <div className="mt-12 flex items-center gap-4 text-white/15">
+                                    <div className="h-px w-8 md:w-16 bg-white/10" />
+                                    <span className="text-[8px] md:text-[10px] tracking-[0.4em] uppercase">learn.viscano.com</span>
+                                    <div className="h-px w-8 md:w-16 bg-white/10" />
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            {/* 4. ABOUT & PORTFOLIO BENTO GRID */}
+            <section className="bg-[#0A0A0A] text-white relative z-20 py-24 md:py-32 px-4 md:px-8 lg:px-12">
+                <div className="max-w-[1500px] mx-auto">
+
+                    {/* ── ABOUT BENTO GRID ── */}
+                    <div className="reveal-card grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+                        {/* Large quote card */}
+                        <div className="md:col-span-8 bg-[#111113] border border-white/[0.06] rounded-3xl p-10 md:p-14 flex flex-col justify-between min-h-[280px] md:min-h-[340px] hover:border-white/[0.14] transition-all duration-500">
+                            <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 self-start">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                                <span className="text-[11px] font-semibold tracking-wide text-white/70">About Us</span>
+                            </div>
+                            <p className="text-2xl md:text-3xl lg:text-[2rem] font-medium text-white/90 tracking-tight leading-[1.4] mt-8">
+                                We help ambitious brands and startups build digital products that stand out and scale. Working smart, building fast, and designing{' '}
+                                <span className="text-white/40 italic font-serif">with purpose.</span>
+                            </p>
+                        </div>
+
+                        {/* Years stat card */}
+                        <div className="md:col-span-4 bg-[#111113] border border-white/[0.06] rounded-3xl p-10 flex flex-col justify-between min-h-[200px] md:min-h-[340px] hover:border-white/[0.14] transition-all duration-500 overflow-hidden relative">
+                            <div className="absolute -bottom-10 -right-10 w-44 h-44 rounded-full border border-white/[0.04]" />
+                            <div className="absolute -bottom-20 -right-20 w-72 h-72 rounded-full border border-white/[0.025]" />
+                            <span className="text-[10px] uppercase tracking-[0.25em] text-white/55 font-semibold">Years of Experience</span>
+                            <div>
+                                <span className="text-8xl md:text-9xl font-bold tracking-tighter text-white leading-none block">9+</span>
+                                <p className="text-white/35 text-sm mt-3 font-medium">Building brands that last</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Stats row */}
+                    <div className="reveal-card grid grid-cols-1 md:grid-cols-3 gap-4 mb-20">
+                        <div className="bg-[#111113] border border-white/[0.06] rounded-3xl p-8 md:p-10 overflow-hidden relative hover:border-white/[0.14] transition-all duration-500">
+                            <div className="absolute top-0 right-0 w-28 h-28 bg-white/[0.018] rounded-bl-full" />
+                            <span className="text-[10px] uppercase tracking-[0.25em] text-white/55 font-semibold block mb-6">Projects Launched</span>
+                            <span className="text-6xl md:text-7xl font-mono font-bold tracking-tighter text-white">10+</span>
+                        </div>
+                        <div className="bg-[#111113] border border-white/[0.06] rounded-3xl p-8 md:p-10 overflow-hidden relative hover:border-white/[0.14] transition-all duration-500">
+                            <div className="absolute top-0 right-0 w-28 h-28 bg-white/[0.018] rounded-bl-full" />
+                            <span className="text-[10px] uppercase tracking-[0.25em] text-white/55 font-semibold block mb-6">Happy Clients</span>
+                            <span className="text-6xl md:text-7xl font-mono font-bold tracking-tighter text-white">10+</span>
+                        </div>
+                        <div className="bg-[#111113] border border-white/[0.06] rounded-3xl p-8 md:p-10 flex flex-col justify-between hover:border-white/[0.14] transition-all duration-500">
+                            <span className="text-[10px] uppercase tracking-[0.25em] text-white/55 font-semibold">Industries Served</span>
+                            <div className="flex flex-wrap gap-2 mt-6">
+                                {['SaaS', 'E-Commerce', 'Real Estate', 'AI Platforms', 'Media', 'Startups'].map(tag => (
+                                    <span key={tag} className="px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] text-white/60 text-[11px] font-medium">{tag}</span>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── PROJECTS SECTION HEADER ── */}
+                    <div className="reveal-card flex items-end justify-between mb-6">
+                        <div>
+                            <div className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-white/55 mb-4">
+                                <span className="w-6 h-[1px] bg-white/40" />
+                                Selected Work
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white leading-tight">
+                                Projects that speak.
+                            </h2>
+                        </div>
+                        <Link to="/results" className="hidden md:flex items-center gap-2 px-6 py-3 rounded-full border border-white/15 text-sm font-medium text-white/60 hover:bg-white hover:text-black hover:border-white transition-all duration-300">
+                            View All
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </Link>
+                    </div>
+
+                    {/* ── PROJECTS BENTO GRID ── */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+                        {/* Card 1 — Wide (SS Consultancy) */}
+                        <a href="https://ssconsultancy.agency/" target="_blank" rel="noopener noreferrer"
+                            className="reveal-card md:col-span-7 h-[420px] md:h-[500px] rounded-3xl overflow-hidden relative group block border border-white/[0.06] hover:border-white/25 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+                            <img src="/ssconsultancy.png" alt="SS Consultancy" loading="lazy"
+                                className="absolute inset-0 w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700 z-[1]" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-[2]" />
+                            <div className="absolute top-6 left-6 flex gap-2 z-10">
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Education</span>
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Visa</span>
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Consultancy</span>
+                            </div>
+                            <div className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 z-10">
+                                <ArrowUpRight className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="absolute bottom-6 left-6 z-10">
+                                <p className="text-white/45 text-xs mb-2 font-medium">Expert visa & overseas education consultancy</p>
+                                <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors uppercase">SS CONSULTANCY</h3>
+                            </div>
+                            <span className="absolute bottom-5 right-7 text-white/10 text-6xl font-black tracking-tighter z-10 select-none">01</span>
+                        </a>
+
+                        {/* Card 2 — Narrow (Kusum Ganji) */}
+                        <a href="https://kusumganji.com/" target="_blank" rel="noopener noreferrer"
+                            className="reveal-card md:col-span-5 h-[420px] md:h-[500px] rounded-3xl overflow-hidden relative group block border border-white/[0.06] hover:border-white/25 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+                            <img src="/kusum.webp" alt="Kusum Ganji" loading="lazy"
+                                className="absolute inset-0 w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700 z-[1]" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-[2]" />
+                            <div className="absolute top-6 left-6 flex gap-2 z-10">
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Portfolio</span>
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Brand</span>
+                            </div>
+                            <div className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 z-10">
+                                <ArrowUpRight className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="absolute bottom-6 left-6 z-10">
+                                <p className="text-white/45 text-xs mb-2 font-medium">Telugu influencer portfolio</p>
+                                <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors">KUSUM GANJI</h3>
+                            </div>
+                            <span className="absolute bottom-5 right-7 text-white/10 text-6xl font-black tracking-tighter z-10 select-none">02</span>
+                        </a>
+
+                        {/* Card 3 — Narrow (The Fehu Code) */}
+                        <a href="https://www.fehu.org.in/" target="_blank" rel="noopener noreferrer"
+                            className="reveal-card md:col-span-5 h-[360px] rounded-3xl overflow-hidden relative group block border border-white/[0.06] hover:border-white/25 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+                            <img src="/fehu.webp" alt="The Fehu Code" loading="lazy"
+                                className="absolute inset-0 w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700 z-[1]" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-[2]" />
+                            <div className="absolute top-6 left-6 flex gap-2 z-10">
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">E-Commerce</span>
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Dev</span>
+                            </div>
+                            <div className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 z-10">
+                                <ArrowUpRight className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="absolute bottom-6 left-6 z-10">
+                                <p className="text-white/45 text-xs mb-2 font-medium">Heritage-themed e-commerce</p>
+                                <h3 className="text-2xl md:text-2xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors">THE FEHU CODE</h3>
+                            </div>
+                            <span className="absolute bottom-5 right-7 text-white/10 text-6xl font-black tracking-tighter z-10 select-none">03</span>
+                        </a>
+
+                        {/* Card 4 — Medium-wide (Grox Digital) */}
+                        <a href="https://grox.digital/" target="_blank" rel="noopener noreferrer"
+                            className="reveal-card md:col-span-7 h-[360px] rounded-3xl overflow-hidden relative group block border border-white/[0.06] hover:border-white/25 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+                            <img src="/grox.webp" alt="Grox Digital" loading="lazy"
+                                className="absolute inset-0 w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700 z-[1]" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-[2]" />
+                            <div className="absolute top-6 left-6 flex gap-2 z-10">
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Web Dev</span>
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Brand</span>
+                            </div>
+                            <div className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 z-10">
+                                <ArrowUpRight className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="absolute bottom-6 left-6 z-10">
+                                <p className="text-white/45 text-xs mb-2 font-medium">Digital agency website</p>
+                                <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors">GROX DIGITAL</h3>
+                            </div>
+                            <span className="absolute bottom-5 right-7 text-white/10 text-6xl font-black tracking-tighter z-10 select-none">04</span>
+                        </a>
+
+                        {/* Card 5 — Half (Sherpal) */}
+                        <a href="https://sherpalai.com/" target="_blank" rel="noopener noreferrer"
+                            className="reveal-card md:col-span-6 h-[380px] rounded-3xl overflow-hidden relative group block border border-white/[0.06] hover:border-white/25 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+                            <img src="/sherpal.webp" alt="Sherpal" loading="lazy"
+                                className="absolute inset-0 w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700 z-[1]" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-[2]" />
+                            <div className="absolute top-6 left-6 flex gap-2 z-10">
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Web Design</span>
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">AI Platform</span>
+                            </div>
+                            <div className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 z-10">
+                                <ArrowUpRight className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="absolute bottom-6 left-6 z-10">
+                                <p className="text-white/45 text-xs mb-2 font-medium">AI-powered platform website</p>
+                                <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors">SHERPAL</h3>
+                            </div>
+                            <span className="absolute bottom-5 right-7 text-white/10 text-6xl font-black tracking-tighter z-10 select-none">05</span>
+                        </a>
+
+                        {/* Card 6 — Half (Delta HRMS) */}
+                        <a href="https://deltahrms.com/" target="_blank" rel="noopener noreferrer"
+                            className="reveal-card md:col-span-6 h-[380px] rounded-3xl overflow-hidden relative group block border border-white/[0.06] hover:border-white/25 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+                            <img src="/deltahrms.webp" alt="Delta HRMS" loading="lazy"
+                                className="absolute inset-0 w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700 z-[1]" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-[2]" />
+                            <div className="absolute top-6 left-6 flex gap-2 z-10">
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">SaaS</span>
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">UI/UX</span>
+                            </div>
+                            <div className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 z-10">
+                                <ArrowUpRight className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="absolute bottom-6 left-6 z-10">
+                                <p className="text-white/45 text-xs mb-2 font-medium">HR management SaaS product</p>
+                                <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors">DELTA HRMS</h3>
+                            </div>
+                            <span className="absolute bottom-5 right-7 text-white/10 text-6xl font-black tracking-tighter z-10 select-none">06</span>
+                        </a>
+
+                        {/* Card 7 — Full (Laxmi Developers) */}
+                        <a href="https://www.laxmideveloper.com/" target="_blank" rel="noopener noreferrer"
+                            className="reveal-card md:col-span-12 h-[420px] md:h-[500px] rounded-3xl overflow-hidden relative group block border border-white/[0.06] hover:border-white/25 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+                            <img src="/laxmidevlopers.webp" alt="Laxmi Developers" loading="lazy"
+                                className="absolute inset-0 w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700 z-[1]" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-[2]" />
+                            <div className="absolute top-6 left-6 flex gap-2 z-10">
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Real Estate</span>
+                                <span className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-semibold text-white/80">Brand</span>
+                            </div>
+                            <div className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 z-10">
+                                <ArrowUpRight className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="absolute bottom-6 left-6 z-10">
+                                <p className="text-white/45 text-xs mb-2 font-medium">Real estate brand & web presence</p>
+                                <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors uppercase">LAXMI DEVELOPERS</h3>
+                            </div>
+                            <span className="absolute bottom-5 right-7 text-white/10 text-6xl font-black tracking-tighter z-10 select-none">07</span>
+                        </a>
+
+                    </div>
+
+                    {/* Mobile-only view all button */}
+                    <div className="flex md:hidden justify-center mt-8">
+                        <Link to="/results" className="bg-white text-black px-8 py-3 rounded-full text-sm font-semibold flex items-center gap-3 hover:scale-105 transition-transform duration-300">
                             View All Projects
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                         </Link>
                     </div>
+
                 </div>
             </section>
 
@@ -839,7 +1185,7 @@ export default function Home() {
                             </h2>
                         </div>
                         <p className="text-base text-black/40 font-light max-w-xs leading-relaxed">
-                            Trusted by ambitious founders, brand leads, and growth teams worldwide.
+                            Trusted by Founders Who Refuse to Be Invisible.
                         </p>
                     </div>
 
@@ -957,28 +1303,28 @@ export default function Home() {
             </section>
 
             {/* 5. STRATEGIC CTA - Start Your Project */}
-            <section className="relative w-full py-24 md:py-36 px-6 md:px-12 flex flex-col items-center overflow-hidden z-30 bg-[#080808]">
+            <section className="relative w-full py-24 md:py-36 px-6 md:px-12 flex flex-col items-center overflow-hidden z-30 bg-white">
 
                 {/* Grain texture */}
-                <svg className="absolute inset-0 w-full h-full z-0 opacity-[0.04] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="absolute inset-0 w-full h-full z-0 opacity-[0.03] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
                     <filter id="cta-noise"><feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter>
                     <rect width="100%" height="100%" filter="url(#cta-noise)" />
                 </svg>
 
                 {/* Radial glow */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[60vh] bg-white/[0.03] blur-[120px] rounded-full pointer-events-none z-0" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[60vh] bg-black/[0.02] blur-[120px] rounded-full pointer-events-none z-0" />
 
                 {/* Header */}
                 <div className="relative z-10 flex flex-col items-center text-center mb-16">
-                    <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-8">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                        <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-white/60">Available for projects · 2025</span>
+                    <div className="flex items-center gap-2 bg-black/5 border border-black/10 rounded-full px-4 py-1.5 mb-8">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                        <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-black/50">Available for projects · 2026</span>
                     </div>
-                    <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.92] mb-6">
+                    <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.92] mb-6 text-black">
                         Start your<br />
-                        <span className="font-serif italic font-normal text-white/50">Project</span> today
+                        <span className="font-serif italic font-normal text-black/35">Project</span> today
                     </h2>
-                    <p className="text-white/40 text-sm md:text-base max-w-md leading-relaxed font-light">
+                    <p className="text-black/45 text-sm md:text-base max-w-md leading-relaxed font-light">
                         Tell us about your project in 60 seconds — we'll get back within 24 hours.
                     </p>
                 </div>

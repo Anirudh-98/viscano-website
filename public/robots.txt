@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://viscano.com/sitemap.xml
+
+# LLM & AI Crawlers
+# See llms.txt for structured content intended for AI assistants
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+# llms.txt — structured content map for AI/LLM crawlers
+# https://viscano.com/llms.txt

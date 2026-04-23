@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import SEOHead from '../components/SEOHead';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Link } from 'react-router-dom';
@@ -9,74 +10,86 @@ gsap.registerPlugin(ScrollTrigger);
 const cases = [
     {
         id: '01',
+        client: 'SS Consultancy',
+        category: 'Education · Brand',
+        title: 'Expert visa & overseas education consultancy platform.',
+        outcome: '98% visa approval rate for elite aspirants',
+        tags: ['Education', 'Visa', 'Consultancy'],
+        img: '/ssconsultancy.png',
+        url: 'https://ssconsultancy.agency/',
+        size: 'large',
+        bg: 'from-[#0F172A] to-[#020617]',
+    },
+    {
+        id: '02',
         client: 'Kusum Ganji',
         category: 'Portfolio · Brand',
         title: 'Portfolio website for Telugu influencer Kusum Ganji.',
         outcome: 'Delivered a stunning personal brand platform',
         tags: ['Portfolio', 'Brand'],
-        img: '/kusum.png',
+        img: '/kusum.webp',
         url: 'https://kusumganji.com/',
-        size: 'large',
+        size: 'small',
         bg: 'from-[#1A1A1A] to-[#0A0A0A]',
     },
     {
-        id: '02',
+        id: '03',
         client: 'The Fehu Code',
         category: 'E-Commerce · Development',
         title: 'E-commerce platform for heritage-themed brand.',
         outcome: 'Full-stack e-commerce with cultural identity',
         tags: ['E-Commerce', 'Development'],
-        img: '/fehu.png',
+        img: '/fehu.webp',
         url: 'https://www.fehu.org.in/',
         size: 'small',
         bg: 'from-[#151515] to-[#050505]',
     },
     {
-        id: '03',
+        id: '04',
         client: 'Grox Digital',
         category: 'Web Development · Brand',
         title: 'Custom website for Grox Digital Pvt. Ltd.',
         outcome: 'Modern digital presence for a growing agency',
         tags: ['Web Development', 'Brand'],
-        img: '/grox.png',
+        img: '/grox.webp',
         url: 'https://grox.digital/',
-        size: 'small',
+        size: 'large',
         bg: 'from-[#1c1c1c] to-[#000000]',
     },
     {
-        id: '04',
+        id: '05',
         client: 'Sherpal',
         category: 'Web Design · Development',
         title: 'AI-powered platform website for Sherpal.',
         outcome: 'Scalable SaaS product landing page',
         tags: ['Web Design', 'Development'],
-        img: '/sherpal.png',
+        img: '/sherpal.webp',
         url: 'https://sherpalai.com/',
-        size: 'large',
+        size: 'small',
         bg: 'from-[#111] to-[#050505]',
     },
     {
-        id: '05',
+        id: '06',
         client: 'Delta HRMS',
         category: 'SaaS · UI/UX',
         title: 'HR management SaaS product website.',
         outcome: 'Clean, conversion-focused SaaS UI',
         tags: ['SaaS', 'UI/UX'],
-        img: '/deltahrms.png',
+        img: '/deltahrms.webp',
         url: 'https://deltahrms.com/',
         size: 'small',
         bg: 'from-[#181818] to-[#080808]',
     },
     {
-        id: '06',
+        id: '07',
         client: 'Laxmi Developers',
         category: 'Real Estate · Brand',
         title: 'Real estate developer brand & web presence.',
         outcome: 'Elevated brand trust for a property developer',
         tags: ['Real Estate', 'Brand'],
-        img: '/laxmidevlopers.png',
+        img: '/laxmidevlopers.webp',
         url: 'https://www.laxmideveloper.com/',
-        size: 'small',
+        size: 'large',
         bg: 'from-[#141414] to-[#000]',
     },
 ];
@@ -121,11 +134,17 @@ export default function Results() {
 
     return (
         <div ref={heroRef} className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white">
+            <SEOHead
+                title="Portfolio & Case Studies | Viscano Creative Studio Hyderabad"
+                description="See Viscano's work: brand identity, web design, and development projects for clients across Hyderabad, Visakhapatnam, and India. Real outcomes, real projects."
+                keywords="portfolio web design Hyderabad, brand projects India, case studies design agency, web development portfolio Hyderabad, creative studio work Visakhapatnam"
+                canonical="https://viscano.com/results"
+            />
 
             {/* ── HERO ── */}
             <section className="pt-36 pb-20 px-6 lg:px-20 max-w-[1400px] mx-auto">
-                <div className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-black/30 mb-10 res-hero-sub">
-                    <span className="w-6 h-[1px] bg-black/20" />
+                <div className="flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-black/55 mb-10 res-hero-sub">
+                    <span className="w-6 h-[1px] bg-black/40" />
                     Selected Cases · Viscano Studio
                 </div>
 
@@ -196,8 +215,8 @@ export default function Results() {
                             {/* Background gradient + image */}
                             <div className={`absolute inset-0 bg-gradient-to-b ${c.bg}`} />
                             <img src={c.img} alt={c.title}
-                                className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 opacity-80 group-hover:opacity-100 ${hovered === c.id ? 'scale-[1.03]' : 'scale-100'}`} />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                                className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 opacity-95 group-hover:opacity-100 ${hovered === c.id ? 'scale-[1.03]' : 'scale-100'}`} />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
                             {/* Top row */}
                             <div className="absolute top-6 left-6 right-6 flex items-start justify-between z-10">
@@ -234,8 +253,8 @@ export default function Results() {
 
             {/* ── TESTIMONIALS ── */}
             <section className="py-28 px-6 lg:px-20 max-w-[1400px] mx-auto">
-                <div className="res-reveal text-[10px] tracking-[0.25em] uppercase text-black/30 mb-16 flex items-center gap-3">
-                    <span className="w-6 h-[1px] bg-black/20" /> What clients say
+                <div className="res-reveal text-[10px] tracking-[0.25em] uppercase text-black/55 mb-16 flex items-center gap-3">
+                    <span className="w-6 h-[1px] bg-black/40" /> What clients say
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/8">
                     {[

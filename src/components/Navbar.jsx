@@ -6,9 +6,10 @@ import { ArrowUpRight } from 'lucide-react';
 const navLinks = [
     { label: 'About', path: '/about' },
     { label: 'Team', path: '/team' },
-    { label: 'Services', path: '/solutions' },
+    { label: 'Services', path: '/services' },
     { label: 'Cases', path: '/results' },
     { label: 'Blog', path: '/blog' },
+    { label: 'Learn', path: '/learn', external: false },
     { label: 'Pricing', path: '/pricing' },
     { label: 'Careers', path: '/careers' },
     { label: 'Contact', path: '/contact' },
@@ -69,7 +70,7 @@ export default function Navbar() {
 
                     {/* Left Nav */}
                     <div className="hidden md:flex items-center gap-10">
-                        {navLinks.slice(0, 4).map((link) => (
+                        {navLinks.slice(0, 5).map((link) => (
                             <Link
                                 key={link.path}
                                 to={link.path}
@@ -97,7 +98,7 @@ export default function Navbar() {
 
                     {/* Right Nav */}
                     <div className="hidden md:flex items-center gap-10">
-                        {navLinks.slice(4).map((link) => (
+                        {navLinks.slice(5).map((link) => (
                             <Link
                                 key={link.path}
                                 to={link.path}
@@ -159,7 +160,7 @@ export default function Navbar() {
                         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
                         {/* Nav links */}
-                        <div className="flex flex-col justify-center flex-1 px-8 gap-1">
+                        <div className="flex flex-col flex-1 px-8 pt-28 pb-8 gap-2 overflow-y-auto">
                             {navLinks.map((link, i) => (
                                 <motion.div
                                     key={link.path}
